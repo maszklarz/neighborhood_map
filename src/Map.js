@@ -8,7 +8,7 @@ import L from 'leaflet';
 class Map extends Component {
 
   componentDidMount() {
-    const theMap = L.map(this.props.mapid).setView([51.110036, 17.031952], 15);
+    this.map = L.map(this.props.mapid).setView([51.110036, 17.031952], 15);
 
     // Alternative map otions:
     //const theMapUrl='http://{s}.tile.osm.org/{z}/{x}/{y}.png'; // this does not require token
@@ -19,7 +19,9 @@ class Map extends Component {
       maxZoom: 18,
       id: 'mapbox.streets',
       accessToken: 'your.mapbox.access.token'
-    }).addTo(theMap);
+    }).addTo(this.map);
+
+    this.props.markers.forEach((marker) => L.marker(marker.position).addTo(this.map));
   }
 
   render() {

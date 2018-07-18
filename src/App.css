@@ -30,3 +30,11 @@
 .leaflet-map {
   height: 180px;
 }
+
+@keyframes fade {
+  from { opacity: 0.5; }
+}
+
+.blinking {
+  animation: fade 0.5s infinite alternate;
+}

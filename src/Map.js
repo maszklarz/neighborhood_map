@@ -43,6 +43,10 @@ class Map extends Component {
         this.props.markers.list[idx].mapref = L.marker(marker.position)
           .bindPopup(marker.description+" "+idx)
           .on('click', (e) => this.markerOnClick(idx))
+          .on('keypress', (e) => {
+            if(e.originalEvent.key==="Enter")
+              this.markerOnClick(idx);
+            })
           .addTo(this.map);
       });
     this.updateMarkerSelection();

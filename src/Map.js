@@ -27,7 +27,7 @@ class Map extends Component {
   render() {
     return (
       <div
-        class="leaflet-map"
+        className="leaflet-map"
         id={this.props.mapid}>
       </div>
     )

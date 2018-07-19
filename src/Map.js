@@ -7,20 +7,56 @@ import L from 'leaflet';
 
 class Map extends Component {
 
+  markerRefs = [];
+
   updateMarkerSelection() {
-    if(this.props.markers.list && this.props.markers.list[0].mapref)
-    this.props.markers.list.forEach((marker, idx) => {
-        if(this.props.markers.sel === idx) {
-          L.DomUtil.addClass(marker.mapref._icon, "blinking");
-          marker.mapref.openPopup();
-        } else {
-          L.DomUtil.removeClass(marker.mapref._icon, "blinking");
+    if(this.props.markers) {
+      this.props.markers.forEach((marker, idx) => {
+        console.log(this.props.markers);
+        console.log(this.markerRefs);
+        if(marker.mapref) {
+          if(this.props.selectedMarker === idx) {
+            L.DomUtil.addClass(marker.mapref._icon, "blinking");
+            marker.mapref.openPopup();
+          } else {
+            L.DomUtil.removeClass(marker.mapref._icon, "blinking");
+          }
         }
       });
+    }
   }
 
   markerOnClick(idx) {
     this.props.markerOnClick(idx);
+  }
+
+  removeMarkersFromMap() {
+    this.markerRefs.forEach((markerRef, idx) => {
+      if(markerRef) {
+        markerRef.remove();
+      }
+    });
+    this.markerRefs = [];
+  }
+
+  loadMarkersToMap( markers ) {
+    console.log("loadMarkersToMap:");
+    console.log(this.props.markers);
+    this.props.markers.forEach((marker, idx) => {
+        // Do not use setState here. Mere completion of the refmap in the
+        // state is not considered a state change.
+        if(!marker.mapref) {
+          marker.mapref = L.marker(marker.position)
+            .bindPopup(marker.description+" "+idx)
+            .on('click', (e) => this.markerOnClick(idx))
+            .on('keypress', (e) => {
+              if(e.originalEvent.key==="Enter")
+                this.markerOnClick(idx);
+              })
+            .addTo(this.map);
+        }
+        this.markerRefs.push(marker.mapref);
+      });
   }
 
   componentDidMount() {
@@ -37,25 +73,20 @@ class Map extends Component {
       accessToken: 'your.mapbox.access.token'
     }).addTo(this.map);
 
-    this.props.markers.list.forEach((marker, idx) => {
-        // Do not use setState here. Mere completion of the refmap in the
-        // state is not considered a state change.
-        this.props.markers.list[idx].mapref = L.marker(marker.position)
-          .bindPopup(marker.description+" "+idx)
-          .on('click', (e) => this.markerOnClick(idx))
-          .on('keypress', (e) => {
-            if(e.originalEvent.key==="Enter")
-              this.markerOnClick(idx);
-            })
-          .addTo(this.map);
-      });
-    this.updateMarkerSelection();
+    this.loadMarkersToMap( this.props.markers );
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+      if(this.props.reloadMarkers) {
+        this.removeMarkersFromMap();
+        this.loadMarkersToMap();
+        this.props.setReloadMarkers(0);
+        console.log(this.markerRefs);
+      }
+      this.updateMarkerSelection();
   }
 
   render() {
-    // The map is not a React element. It explains why this side effect of render(),
-    // which is normally a no no.
-    this.updateMarkerSelection();
     return (
       <div
         className="leaflet-map"

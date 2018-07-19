@@ -7,21 +7,97 @@ import * as FoursquareAPI from './FoursquareAPI';
 import * as NytAPI from './NytAPI';
 
 class Button extends Component {
+
+markerList = [{
+    position: {
+      lat: 51.108177,
+      lng: 17.039484
+    },
+    foursquareId: '',
+    description: 'Galeria Dominikańska'
+  }, {
+    position: {
+      lat: 51.112262,
+      lng: 17.028149
+    },
+    foursquareId: '',
+    description: '<b>Czajownia<b>'
+  }, {
+    position: {
+      lat: 51.117953,
+      lng: 17.032108
+    },
+    foursquareId: '',
+    description: '<b>Macondo<b>'
+  }, {
+    position: {
+      lat: 51.123011,
+      lng: 17.034473
+    },
+    foursquareId: '',
+    description: '<b>Hakernia<b>'
+  }, {
+    position: {
+      lat: 51.118438,
+      lng: 17.035584
+    },
+    foursquareId: '',
+    description: '<b>Piecownia<b>'
+  }, {
+    position: {
+      lat: 51.116138,
+      lng: 17.042246
+    },
+    foursquareId: '',
+    description: '<b>Manufaktura<b>'
+  }, {
+    position: {
+      lat: 51.119617,
+      lng: 17.032521
+    },
+    foursquareId: '',
+    description: '<b>Narożnik<b>'
+  }, {
+    position: {
+      lat: 51.122896,
+      lng: 17.033867
+    },
+    foursquareId: '',
+    description: '<b>Pierogi<b>'
+  }
+]
+
+  randomMarkers = () => {
+    return this.markerList.filter(marker => (Math.random() < 0.5));
+  }
+
+  newMarker = {
+      position: {
+        lat: 51.109177,
+        lng: 17.036484
+      },
+      foursquareId: '',
+      description: 'Nowy marker'
+    }
+
   render() {
     return (
-      <button onClick={event => this.props.onClk(this.props.idx)}>Guzik Component</button>
+      <button onClick={(event) => { this.props.onClk(this.randomMarkers()); }}>Guzik Component</button>
     )
   }
 }
 
 class App extends Component {
 
-  state = { markers: {
-              sel: 1,
-              list: [{position: { lat: 51.108177, lng: 17.039484 }, id: '', description: 'Galeria<br>Handlowa' },
-                     {position: { lat: 51.112262, lng: 17.028149 }, id: '', description: '<b>Knajpa<b>'}]
-            }
+  state = {
+            selectedMarker: -1,
+            markers: []
           }
+  reloadMarkers = 0;
+
+  setReloadMarkers = (value) => {
+    this.reloadMarkers = value;
+  }
 
   componentDidMount() {
 
@@ -41,8 +117,26 @@ class App extends Component {
 */
   }
 
+  addMarker = (markerData) => {
+    this.setState((state) => { return state.markers.push(markerData); });
+    this.setReloadMarkers(1);
+  }
+
   selectItemByIdx = (idx) => {
-    this.setState((state) => { return state.markers.sel = idx; });
+    this.setState({ selectedMarker: idx });
+    console.log(this.state);
+  }
+
+  addMarkers = (markerList) => {
+    markerList.forEach(marker => {
+      if(marker.mapref)
+      delete(marker.mapref);
+    });
+    this.setState({ markers: markerList });
+    this.selectItemByIdx(-1);
+    console.log(this.state.markers);
+    console.log(markerList);
+    this.setReloadMarkers(1);
   }
 
   render() {
@@ -55,14 +149,16 @@ class App extends Component {
         <Map
           mapid="themap"
           markers={this.state.markers}
+          reloadMarkers={this.reloadMarkers}
+          setReloadMarkers={this.setReloadMarkers}
+          selectedMarker={this.state.selectedMarker}
           markerOnClick={this.selectItemByIdx}
         >
         </Map>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <Button idx={0} onClk={this.selectItemByIdx}></Button>
-        <Button idx={1} onClk={this.selectItemByIdx}></Button>
+        <Button idx={2} onClk={this.addMarkers}></Button>
       </div>
     );
   }

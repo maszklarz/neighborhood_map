@@ -90,6 +90,7 @@ markerList = [{
 class App extends Component {
 
   state = {
+            query: "",
             selectedMarker: -1,
             markers: []
           }
@@ -139,13 +140,19 @@ class App extends Component {
     this.setReloadMarkers(1);
   }
 
+  updateQuery = (query) => {
+    this.setState({query})
+  }
+
   render() {
     return (
       <div className="App">
+
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+
         <Map
           mapid="themap"
           markers={this.state.markers}
@@ -155,10 +162,20 @@ class App extends Component {
           markerOnClick={this.selectItemByIdx}
         >
         </Map>
+
+        <input
+          className="query-input"
+          type="text"
+          placeholder="Filter places"
+          value={this.state.query}
+          onChange={(event) => this.updateQuery(event.target.value)}/>
+
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+
         <Button idx={2} onClk={this.addMarkers}></Button>
+
       </div>
     );
   }

@@ -28,7 +28,7 @@
 }
 
 .leaflet-map {
-  height: 180px;
+  height: 300px;
 }
 
 @keyframes fade {
@@ -37,4 +37,8 @@
 
 .blinking {
   animation: fade 0.5s infinite alternate;
+}
+
+.query-input {
+  width: 100%;
 }

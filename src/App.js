@@ -63,7 +63,7 @@ markerList = [{
       lng: 17.033867
     },
     foursquareId: '',
-    description: '<b>Pierogi<b>'
+    description: '<b>Smak<b>'
   }, {
     position: {
       lat: 51.109773,
@@ -71,6 +71,34 @@ markerList = [{
     },
     foursquareId: '4b643fc4f964a52058a62ae3',
     description: 'Rynek'
+  }, {
+    position: {
+      lat: 51.120522,
+      lng: 17.05297
+    },
+    foursquareId: '4be8758088ed2d7f94e5cb1d',
+    description: 'Park Tołpy'
+  }, {
+    position: {
+      lat: 51.1193,
+      lng: 17.033108
+    },
+    foursquareId: '558441d0498e012ffdab2637',
+    description: 'Powoli'
+  }, {
+    position: {
+      lat: 51.11997,
+      lng: 17.031523
+    },
+    foursquareId: '579f5d16498ebfc79acf82b4',
+    description: 'Ogień'
+  }, {
+    position: {
+      lat: 51.12292,
+      lng: 17.034495
+    },
+    foursquareId: '',
+    description: 'Ramy Domański'
   }
 ]
 
@@ -108,6 +136,9 @@ class App extends Component {
     this.reloadMarkers = value;
   }
 
+  /*
+   * Append third party data to markers kept in state
+   */
   loadThirdPartyData(markers) {
 
     // load 4sq bestPhoto
@@ -115,28 +146,24 @@ class App extends Component {
       // keep fsqId for future reference
       const fsqId = marker.foursquareId;
       // if key is available and data is missing
-      if(fsqId && !marker.foursquareImg /* other 4sq data test if necessary*/) {
+      if(fsqId && !marker.foursquareData) {
         // get data from API
         FoursquareAPI.getById(marker.foursquareId)
           .then(data => {
             console.log("Foursquare, " + marker.description);
             console.log(data);
             // if data received, make sure it has what we need in it
-            if(data.response.venue && data.response.venue.bestPhoto) {
+            if(data.meta && data.meta.code && data.meta.code === 200) {
               // it has, so apply it to the state
               this.setState((prevState) => {
-                // update the right spot in previous state,
-                // and return the new version
+                // update the right property in the previous state,
+                // and return it as the new version
                 prevState.markers =
                   prevState.markers.map(marker => {
                     // the fsqId we kept at the beginning will help locate
                     // the right spot (marker) to update
                     if(marker.foursquareId === fsqId)
-                      marker.foursquareImg =
-                         data.response.venue.bestPhoto.prefix +
-                         data.response.venue.bestPhoto.width + 'x' +
-                         data.response.venue.bestPhoto.height +
-                         data.response.venue.bestPhoto.suffix;
+                      marker.foursquareData = data;
                     return marker;
                   })
                 console.log(prevState.markers[idx]);
@@ -238,8 +265,18 @@ a
           {this.state.markers.map((place, idx) => (
             <li>
               {
-                place.foursquareImg &&
-                <img width="50px" height="50px" src={place.foursquareImg} alt={place.description}/>
+                place.foursquareData &&
+                place.foursquareData.response &&
+                place.foursquareData.response.venue &&
+                place.foursquareData.response.venue.bestPhoto &&
+                  <img
+                    width="50px"
+                    height="50px"
+                    src={place.foursquareData.response.venue.bestPhoto.prefix +
+                         place.foursquareData.response.venue.bestPhoto.width + 'x' +
+                         place.foursquareData.response.venue.bestPhoto.height +
+                         place.foursquareData.response.venue.bestPhoto.suffix}
+                    alt={place.description}/>
               }
               <a href="#" onClick={(e) => this.selectItemByIdx(idx)}>{place.description}</a>
             </li>

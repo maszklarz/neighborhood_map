@@ -9,7 +9,7 @@ class Map extends Component {
 
   markerRefs = [];
 
-  updateMarkerSelection() {
+  highlightSelectedMarker() {
     if(this.props.markers) {
       this.props.markers.forEach((marker, idx) => {
         console.log(this.props.markers);
@@ -77,13 +77,13 @@ class Map extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-      if(this.props.reloadMarkers) {
-        this.removeMarkersFromMap();
-        this.loadMarkersToMap();
-        this.props.setReloadMarkers(0);
-        console.log(this.markerRefs);
-      }
-      this.updateMarkerSelection();
+    if(this.props.reloadMarkers) {
+      this.removeMarkersFromMap();
+      this.loadMarkersToMap();
+      this.props.setReloadMarkers(0);
+      console.log(this.markerRefs);
+    }
+    this.highlightSelectedMarker();
   }
 
   render() {

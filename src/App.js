@@ -27,8 +27,15 @@ markerList = [{
       lat: 51.117953,
       lng: 17.032108
     },
-    foursquareId: '',
+    foursquareId: '52b03642498e42beba495943',
     description: '<b>Macondo</b>'
+  }, {
+    position: {
+      lat: 51.1167066,
+      lng: 17.0313012
+    },
+    foursquareId: '4e0b56b2d164e3547c2feb9d',
+    description: 'Cafe Rozrusznik'
   }, {
     position: {
       lat: 51.123011,

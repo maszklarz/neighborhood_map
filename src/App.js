@@ -282,6 +282,7 @@ a
         <ul>
           {this.state.markers.map((place, idx) => (
             <li className={this.state.selectedMarker === idx ? "selected-place" : ""}>
+              <button onClick={(e) => this.selectItemByIdx(idx)}>
               {
                 place.foursquareData &&
                 place.foursquareData.response &&
@@ -296,7 +297,8 @@ a
                          place.foursquareData.response.venue.bestPhoto.suffix}
                     alt={place.description}/>
               }
-              <a href="#" onClick={(e) => this.selectItemByIdx(idx)}>{place.description}</a>
+              {place.description}
+              </button>
             </li>
           ))}
         </ul>

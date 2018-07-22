@@ -281,7 +281,7 @@ class App extends Component {
 a
         <ul>
           {this.state.markers.map((place, idx) => (
-            <li>
+            <li className={this.state.selectedMarker === idx ? "selected-place" : ""}>
               {
                 place.foursquareData &&
                 place.foursquareData.response &&

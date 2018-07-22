@@ -39,6 +39,10 @@
   animation: fade 0.5s infinite alternate;
 }
 
+.selected-place {
+  background-color: #df0;
+}
+
 .query-input {
   width: 100%;
 }

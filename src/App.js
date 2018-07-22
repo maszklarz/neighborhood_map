@@ -5,10 +5,11 @@ import Map from './Map';
 import * as UnsplashAPI from './UnsplashAPI';
 import * as FoursquareAPI from './FoursquareAPI';
 import * as NytAPI from './NytAPI';
+import escapeRegExp from 'escape-string-regexp';
+import regExp from 'escape-string-regexp';
 
-class Button extends Component {
 
-markerList = [{
+const markerList = [{
     position: {
       lat: 51.108177,
       lng: 17.039484
@@ -110,8 +111,9 @@ markerList = [{
 ]
 
 
+class Button extends Component {
   randomMarkers = () => {
-    return this.markerList.filter(marker => (Math.random() < 0.5));
+    return markerList.filter(marker => (Math.random() < 0.5));
   }
 
   newMarker = {
@@ -222,7 +224,7 @@ class App extends Component {
       if(marker.mapref)
         delete(marker.mapref);
     });
-    // add new markers to state
+    // replace old markers with new markers in state
     this.setState({ markers: markerList });
     // unselect marker if any
     this.selectItemByIdx(-1);
@@ -239,7 +241,16 @@ class App extends Component {
    * Update state when text in query box changes
    */
   updateQuery = (query) => {
-    this.setState({query})
+    this.setState({query});
+    if(query) {
+      // select places matching the query
+      const match = new RegExp(escapeRegExp(query), "i");
+      this.addMarkers(markerList.filter(marker => match.test(marker.description)));
+    }
+    else {
+      // for empty query take all places
+      this.addMarkers(markerList);
+    }
   }
 
   render() {

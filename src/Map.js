@@ -12,13 +12,13 @@ class Map extends Component {
   highlightSelectedMarker() {
     if(this.props.markers) {
       this.props.markers.forEach((marker, idx) => {
-        console.log(this.props.markers);
-        console.log(this.markerRefs);
         if(marker.mapref) {
           if(this.props.selectedMarker === idx) {
             L.DomUtil.addClass(marker.mapref._icon, "blinking");
+            marker.mapref.setZIndexOffset(1000);
             marker.mapref.openPopup();
           } else {
+            marker.mapref.setZIndexOffset(1);
             L.DomUtil.removeClass(marker.mapref._icon, "blinking");
           }
         }
@@ -76,6 +76,10 @@ class Map extends Component {
     this.loadMarkersToMap( this.props.markers );
   }
 
+  /*
+   * Executed when parent's state changes are replicated down to map.
+   * The changes may include new markers, or just the marker selection.
+   */
   componentDidUpdate = (prevProps, prevState) => {
     if(this.props.reloadMarkers) {
       this.removeMarkersFromMap();

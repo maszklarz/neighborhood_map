@@ -48,10 +48,14 @@ class Map extends Component {
         if(!marker.mapref) {
           marker.mapref = L.marker(marker.position)
             .bindPopup(marker.description+" "+idx)
-            .on('click', (e) => this.markerOnClick(idx))
+            .on('click', (e) => {
+              this.markerOnClick(idx);
+              e.originalEvent.target.focus();
+            })
             .on('keypress', (e) => {
               if(e.originalEvent.key==="Enter")
                 this.markerOnClick(idx);
+                e.originalEvent.target.focus();
               })
             .addTo(this.map);
         }

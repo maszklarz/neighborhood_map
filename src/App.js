@@ -22,14 +22,14 @@ const markerList = [{
       lng: 17.028149
     },
     foursquareId: '',
-    description: '<b>Czajownia</b>'
+    description: 'Czajownia'
   }, {
     position: {
       lat: 51.117953,
       lng: 17.032108
     },
     foursquareId: '52b03642498e42beba495943',
-    description: '<b>Macondo</b>'
+    description: 'Macondo'
   }, {
     position: {
       lat: 51.1167066,
@@ -43,35 +43,35 @@ const markerList = [{
       lng: 17.034473
     },
     foursquareId: '',
-    description: '<b>Hakernia</b>'
+    description: 'Hakernia'
   }, {
     position: {
       lat: 51.118438,
       lng: 17.035584
     },
     foursquareId: '',
-    description: '<b>Piecownia</b>'
+    description: 'Piecownia'
   }, {
     position: {
       lat: 51.116138,
       lng: 17.042246
     },
     foursquareId: '',
-    description: '<b>Manufaktura</b>'
+    description: 'Manufaktura'
   }, {
     position: {
       lat: 51.119617,
       lng: 17.032521
     },
     foursquareId: '',
-    description: '<b>Narożnik<b>'
+    description: 'Narożnik'
   }, {
     position: {
       lat: 51.122896,
       lng: 17.033867
     },
     foursquareId: '',
-    description: '<b>Smak<b>'
+    description: 'Smak'
   }, {
     position: {
       lat: 51.109773,
@@ -202,6 +202,7 @@ class App extends Component {
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
 */
+    this.addMarkers(markerList);
   }
 
   addMarker = (markerData) => {
@@ -209,6 +210,9 @@ class App extends Component {
     this.setReloadMarkers(1);
   }
 
+  /*
+   * Executed when map marker is clicked
+   */
   selectItemByIdx = (idx) => {
     this.setState({ selectedMarker: idx });
     console.log(this.state);
@@ -253,62 +257,80 @@ class App extends Component {
     }
   }
 
+  componentDidUpdate() {
+//    ReactDOM.findDOMNode(this.refs['place-'+this.state.selectedMarker]).focus();
+    //this.state.selectedMarker
+    const foc = document.getElementById('place-'+this.state.selectedMarker);
+    if (foc) {
+      foc.focus();
+    }
+  }
   render() {
     return (
       <div className="App">
 
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Neighborhood Map</h1>
         </header>
 
-        <Map
-          mapid="themap"
-          markers={this.state.markers}
-          reloadMarkers={this.reloadMarkers}
-          setReloadMarkers={this.setReloadMarkers}
-          selectedMarker={this.state.selectedMarker}
-          markerOnClick={this.selectItemByIdx}
-        >
-        </Map>
-
-        <input
-          className="query-input"
-          type="text"
-          placeholder="Filter places"
-          value={this.state.query}
-          onChange={(event) => this.updateQuery(event.target.value)}/>
-a
-        <ul>
-          {this.state.markers.map((place, idx) => (
-            <li className={this.state.selectedMarker === idx ? "selected-place" : ""}>
-              <button onClick={(e) => this.selectItemByIdx(idx)}>
-              {
-                place.foursquareData &&
-                place.foursquareData.response &&
-                place.foursquareData.response.venue &&
-                place.foursquareData.response.venue.bestPhoto &&
-                  <img
-                    width="50px"
-                    height="50px"
-                    src={place.foursquareData.response.venue.bestPhoto.prefix +
-                         place.foursquareData.response.venue.bestPhoto.width + 'x' +
-                         place.foursquareData.response.venue.bestPhoto.height +
-                         place.foursquareData.response.venue.bestPhoto.suffix}
-                    alt={place.description}/>
-              }
-              {place.description}
-              </button>
-            </li>
-          ))}
-        </ul>
-b
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-
-        <Button idx={2} onClk={this.addMarkers}></Button>
-
+        <main id="maincontent">
+          <section id="map-container">
+            <Map
+              role="application"
+              aria-label="Map with places"
+              mapid="themap"
+              markers={this.state.markers}
+              reloadMarkers={this.reloadMarkers}
+              setReloadMarkers={this.setReloadMarkers}
+              selectedMarker={this.state.selectedMarker}
+              markerOnClick={this.selectItemByIdx}
+            ></Map>
+          </section>
+          <section id="places-container">
+            <input
+              className="query-input"
+              name="places-filter"
+              type="text"
+              placeholder="Filter places"
+              value={this.state.query}
+              onChange={(event) => this.updateQuery(event.target.value)}
+            />
+            <ul className="places-list">
+              {this.state.markers.map((place, idx) => (
+                <li key={"place-"+idx}
+                    tabindex='-1'
+                    className={this.state.selectedMarker === idx ? "selected-place" : ""}
+                >
+                  <button
+                    onClick={(e) => this.selectItemByIdx(idx)}
+                    id={"place-"+idx}
+                  >
+                  {
+                    place.foursquareData &&
+                    place.foursquareData.response &&
+                    place.foursquareData.response.venue &&
+                    place.foursquareData.response.venue.bestPhoto &&
+                      <img
+                        width="50px"
+                        height="50px"
+                        src={place.foursquareData.response.venue.bestPhoto.prefix +
+                             place.foursquareData.response.venue.bestPhoto.width + 'x' +
+                             place.foursquareData.response.venue.bestPhoto.height +
+                             place.foursquareData.response.venue.bestPhoto.suffix}
+                        alt={"A picture of "+place.description}/>
+                  }
+                  {
+                    !place.foursquareData && <p className="fsq-missing-msg">Foursquare data not available.</p>
+                  }
+                  <h2>{place.description}</h2>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <Button idx={2} onClk={this.addMarkers}></Button>
+        </main>
       </div>
     );
   }

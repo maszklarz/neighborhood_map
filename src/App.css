@@ -1,5 +1,26 @@
+html {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#root {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .App {
+  position: absolute;
   text-align: center;
+  width: 100%;
+  height: 100%;
+  /* display: flex;
+  flex-wrap: wrap; */
 }
 
 .App-logo {
@@ -8,9 +29,10 @@
 }
 
 .App-header {
+  width: 100%;
   background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 50px;
+  padding: 0;
   color: white;
 }
 
@@ -27,22 +49,118 @@
   to { transform: rotate(360deg); }
 }
 
-.leaflet-map {
-  height: 300px;
+
+#maincontent {
+  position: absolute;
+  width: 100%;
+  height: 80%;
+  /* display: flex;
+  flex-wrap: wrap; */
 }
 
-@keyframes fade {
+#map-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 50%;
+  opacity: 40%;
+  z-index: 100;
+}
+.leaflet-map {
+  /* position: absolute; */
+  width: 100%;
+  height: 100%;
+}
+
+/* Map marker animation */
+
+/* @keyframes fade {
   from { opacity: 0.5; }
+} */
+@keyframes jump {
+  from { top: -10px; }
 }
 
 .blinking {
-  animation: fade 0.5s infinite alternate;
+  animation: jump 0.3s infinite alternate;
 }
 
-.selected-place {
-  background-color: #df0;
+
+/* places list */
+
+#places-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .query-input {
+  position: fixed;
+  top: 50%;
+  left: 0;
   width: 100%;
+  z-index: 99;
+}
+
+.query-input:focus {
+  /* outline: 0; */
+  background-color: #ffa;
+  /* border: 5px; */
+  /* border-color: #aaa; */
+}
+
+.places-list {
+  /* position: relative; */
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  /* display: flex;
+  flex-wrap: wrap; */
+  overflow: auto;
+}
+
+.places-list li {
+  list-style: none;
+  -webkit-padding-start: 0;
+  padding: 0;
+  background-color: #fff;
+  /* border: 2px solid #ccc; */
+  font-family: Arial,sans-serif;
+  /* margin: 15px; */
+  /* min-height: 100px; */
+  /* padding: 0 30px 25px; */
+  padding: 0;
+  text-align: left;
+  width: 100%;
+
+  /* display: flex;
+  flex-wrap: wrap; */
+}
+
+.selected-place button {
+  background-color: #cff;
+}
+
+.selected-place button:focus {
+  outline: 0;
+  /* box-shadow: 8px 8px 8px 8px rgba(255, 255, 255, 0.8); */
+  background-color: #cff;
+}
+
+li button {
+  width: 100%;
+  /* height: 100%; */
+  background-color: #fff;
+  border: 0;
+  padding: 0;
+}
+
+li button:focus {
+  outline: 0;
+  /* box-shadow: 8px 8px 8px 8px rgba(255, 255, 255, 0.8); */
+  background-color: #ffa;
 }

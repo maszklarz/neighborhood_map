@@ -22,21 +22,24 @@ const markerList = [{
       lng: 17.028149
     },
     foursquareId: '',
-    description: 'Czajownia'
+    description: 'Czajownia',
+    keywords: 'tea bar'
   }, {
     position: {
       lat: 51.117953,
       lng: 17.032108
     },
     foursquareId: '52b03642498e42beba495943',
-    description: 'Macondo'
+    description: 'Macondo',
+    keywords: 'cafe coffee tea art gallery handcraft souvenirs shop events'
   }, {
     position: {
       lat: 51.1167066,
       lng: 17.0313012
     },
     foursquareId: '4e0b56b2d164e3547c2feb9d',
-    description: 'Cafe Rozrusznik'
+    description: 'Cafe Rozrusznik',
+    keywords: 'cafe coffee tea bar'
   }, {
     position: {
       lat: 51.123011,
@@ -50,28 +53,32 @@ const markerList = [{
       lng: 17.035584
     },
     foursquareId: '',
-    description: 'Piecownia'
+    description: 'Piecownia',
+    keywords: 'handmade ceramics souvenirs shop handcraft'
   }, {
     position: {
       lat: 51.116138,
       lng: 17.042246
     },
     foursquareId: '',
-    description: 'Manufaktura'
+    description: 'Manufaktura',
+    keywords: 'art gallery shop handcraft'
   }, {
     position: {
       lat: 51.119617,
       lng: 17.032521
     },
     foursquareId: '',
-    description: 'Narożnik'
+    description: 'Narożnik',
+    keywords: 'restaurant food cafe coffee tea bar'
   }, {
     position: {
       lat: 51.122896,
       lng: 17.033867
     },
     foursquareId: '',
-    description: 'Smak'
+    description: 'Smak',
+    keywords: 'restaurant food coffee'
   }, {
     position: {
       lat: 51.109773,
@@ -92,21 +99,24 @@ const markerList = [{
       lng: 17.033108
     },
     foursquareId: '558441d0498e012ffdab2637',
-    description: 'Powoli'
+    description: 'Powoli',
+    keywords: 'restaurant food coffee tea'
   }, {
     position: {
       lat: 51.11997,
       lng: 17.031523
     },
     foursquareId: '579f5d16498ebfc79acf82b4',
-    description: 'Ogień'
+    description: 'Ogień',
+    keywords: 'restaurant pizza coffee'
   }, {
     position: {
       lat: 51.12292,
       lng: 17.034495
     },
     foursquareId: '',
-    description: 'Ramy Domański'
+    description: 'Ramy Domański',
+    keywords: 'art frames handcraft'
   }
 ]
 
@@ -235,7 +245,7 @@ class App extends Component {
     console.log(this.state.markers);
     console.log(markerList);
 
-    this.loadThirdPartyData(markerList);
+//    this.loadThirdPartyData(markerList);
     // set flag that causes map to reload its markers on
     // map component update, see map's componentDidUpdate()
     this.setReloadMarkers(1);
@@ -249,7 +259,12 @@ class App extends Component {
     if(query) {
       // select places matching the query
       const match = new RegExp(escapeRegExp(query), "i");
-      this.addMarkers(markerList.filter(marker => match.test(marker.description)));
+      this.addMarkers(
+        markerList.filter(marker =>
+          match.test(marker.description) ||
+          (marker.keywords && match.test(marker.keywords))
+        )
+      );
     }
     else {
       // for empty query take all places
@@ -258,8 +273,8 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-//    ReactDOM.findDOMNode(this.refs['place-'+this.state.selectedMarker]).focus();
-    //this.state.selectedMarker
+    // Scroll places list to show selected place
+    // by setting focus on it
     const foc = document.getElementById('place-'+this.state.selectedMarker);
     if (foc) {
       foc.focus();
@@ -299,7 +314,7 @@ class App extends Component {
             <ul className="places-list">
               {this.state.markers.map((place, idx) => (
                 <li key={"place-"+idx}
-                    tabindex='-1'
+                    tabIndex='-1'
                     className={this.state.selectedMarker === idx ? "selected-place" : ""}
                 >
                   <button

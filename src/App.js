@@ -121,27 +121,6 @@ const markerList = [{
 ]
 
 
-class Button extends Component {
-  randomMarkers = () => {
-    return markerList.filter(marker => (Math.random() < 0.5));
-  }
-
-  newMarker = {
-      position: {
-        lat: 51.109177,
-        lng: 17.036484
-      },
-      foursquareId: '',
-      description: 'Nowy marker'
-    }
-
-  render() {
-    return (
-      <button onClick={(event) => { this.props.onClk(this.randomMarkers()); }}>Guzik Component</button>
-    )
-  }
-}
-
 class App extends Component {
 
   state = {
@@ -344,7 +323,6 @@ class App extends Component {
               ))}
             </ul>
           </section>
-          <Button idx={2} onClk={this.addMarkers}></Button>
         </main>
       </div>
     );

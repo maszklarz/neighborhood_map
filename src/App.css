@@ -99,10 +99,10 @@ body {
 }
 
 .query-input {
-  position: fixed;
   top: 50%;
   left: 0;
   width: 100%;
+  height: 30px;
   z-index: 99;
 }
 
@@ -118,6 +118,7 @@ body {
   width: 100%;
   height: 100%;
   padding: 0;
+  margin: 0;
   /* display: flex;
   flex-wrap: wrap; */
   overflow: auto;

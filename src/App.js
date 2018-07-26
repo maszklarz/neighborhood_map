@@ -30,6 +30,8 @@ const markerList = [{
       lng: 17.032108
     },
     foursquareId: '52b03642498e42beba495943',
+    facebookUrl: 'https://www.facebook.com/macondo.fundacja/',
+    www: 'http://www.macondo.com.pl',
     description: 'Macondo',
     keywords: 'cafe coffee tea art gallery handcraft souvenirs shop events'
   }, {
@@ -68,7 +70,8 @@ const markerList = [{
       lat: 51.119617,
       lng: 17.032521
     },
-    foursquareId: '',
+    foursquareId: '55577e53498ec3f82b1871c8',
+    facebookUrl: 'https://www.facebook.com/bistronaroznik/',
     description: 'Narożnik',
     keywords: 'restaurant food cafe coffee tea bar'
   }, {
@@ -191,7 +194,7 @@ class App extends Component {
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
 */
-    this.addMarkers(markerList);
+    this.addMarkers(markerList.slice(7,8));
   }
 
   addMarker = (markerData) => {
@@ -224,7 +227,7 @@ class App extends Component {
     console.log(this.state.markers);
     console.log(markerList);
 
-//    this.loadThirdPartyData(markerList);
+    this.loadThirdPartyData(markerList);
     // set flag that causes map to reload its markers on
     // map component update, see map's componentDidUpdate()
     this.setReloadMarkers(1);
@@ -237,7 +240,9 @@ class App extends Component {
     this.setState({query});
     if(query) {
       // select places matching the query
-      const match = new RegExp(escapeRegExp(query), "i");
+      let q = escapeRegExp(query).replace(' ','|');
+      //q = query;
+      const match = new RegExp(q, "i");
       this.addMarkers(
         markerList.filter(marker =>
           match.test(marker.description) ||
@@ -294,30 +299,86 @@ class App extends Component {
               {this.state.markers.map((place, idx) => (
                 <li key={"place-"+idx}
                     tabIndex='-1'
-                    className={this.state.selectedMarker === idx ? "selected-place" : ""}
+                    className={(this.state.selectedMarker === idx ? "selected-place" : "")}
                 >
                   <button
                     onClick={(e) => this.selectItemByIdx(idx)}
                     id={"place-"+idx}
+                    className="place"
                   >
+                  <div className="place-header">
+                  <span><h2 className="place-name">{place.description}</h2></span>
                   {
                     place.foursquareData &&
                     place.foursquareData.response &&
                     place.foursquareData.response.venue &&
-                    place.foursquareData.response.venue.bestPhoto &&
-                      <img
-                        width="50px"
-                        height="50px"
-                        src={place.foursquareData.response.venue.bestPhoto.prefix +
-                             place.foursquareData.response.venue.bestPhoto.width + 'x' +
-                             place.foursquareData.response.venue.bestPhoto.height +
-                             place.foursquareData.response.venue.bestPhoto.suffix}
-                        alt={"A picture of "+place.description}/>
+                    place.foursquareData.response.venue.rating &&
+                      <span className="fsq-rating">({place.foursquareData.response.venue.rating})</span>
                   }
+                  </div>
                   {
-                    !place.foursquareData && <p className="fsq-missing-msg">Foursquare data not available.</p>
+                    place.keywords &&
+                      <p className="keywords">{place.keywords}</p>
                   }
-                  <h2>{place.description}</h2>
+                  <article className="place-main-content">
+                    {
+                      place.foursquareData &&
+                      place.foursquareData.response &&
+                      place.foursquareData.response.venue &&
+                      place.foursquareData.response.venue.bestPhoto &&
+                        <div className="place-img">
+                          <img className="fsq-img"
+                            src={place.foursquareData.response.venue.bestPhoto.prefix +
+                                 place.foursquareData.response.venue.bestPhoto.width + 'x' +
+                                 place.foursquareData.response.venue.bestPhoto.height +
+                                 place.foursquareData.response.venue.bestPhoto.suffix}
+                            alt={"A picture of "+place.description}/>
+                        </div>
+                    }
+                    {
+                      place.foursquareData &&
+                      place.foursquareData.response &&
+                      place.foursquareData.response.venue &&
+                      <div className="place-main-text">
+                      {
+                        place.foursquareData.response.venue.location &&
+                        place.foursquareData.response.venue.location.address &&
+                          <p className="fsq-address">Address: {place.foursquareData.response.venue.location.address}</p>
+                      }
+                      {
+                        place.foursquareData.response.venue.tips &&
+                        place.foursquareData.response.venue.tips.groups &&
+                        place.foursquareData.response.venue.tips.groups.forEach((group) => {
+                            group.items &&
+                            group.items.forEach((item) => {
+                              item.text && <p className="fsq-tip">{item.text}</p>
+                            })
+                          }
+                        )
+                      }
+                      {
+                        place.foursquareData.response.venue.tips &&
+                        place.foursquareData.response.venue.tips.groups[0] &&
+                        place.foursquareData.response.venue.tips.groups[0].items[0] &&
+                        place.foursquareData.response.venue.tips.groups[0].items[0].text &&
+                          <p className="fsq-tip">Tip: {place.foursquareData.response.venue.tips.groups[0].items[0].text}</p>
+                      }
+                      <p className="external-links">
+                      {
+                        place.facebookUrl &&
+                          <a className="fb-url" href={place.facebookUrl}>fb</a>
+                      }
+                      {
+                        place.www &&
+                          <a className="www-url" href={place.www}>www</a>
+                      }
+                      </p>
+                      </div>
+                    }
+                    {
+                      !place.foursquareData && <p className="fsq-missing-msg">Foursquare data not available.</p>
+                    }
+                  </article>
                   </button>
                 </li>
               ))}

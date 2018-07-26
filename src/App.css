@@ -64,7 +64,7 @@ body {
   top: 0;
   width: 100%;
   height: 50%;
-  opacity: 40%;
+  /* opacity: 40%; */
   z-index: 100;
 }
 .leaflet-map {
@@ -142,6 +142,13 @@ body {
   flex-wrap: wrap; */
 }
 
+.place {
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-bottom: 5px; */
+  /* border-bottom: 1px; */
+}
+
 .selected-place button {
   background-color: #cff;
 }
@@ -156,7 +163,8 @@ li button {
   width: 100%;
   /* height: 100%; */
   background-color: #fff;
-  border: 0;
+  border-width: 0;
+  border-bottom-width: 1px;
   padding: 0;
 }
 
@@ -164,4 +172,121 @@ li button:focus {
   outline: 0;
   /* box-shadow: 8px 8px 8px 8px rgba(255, 255, 255, 0.8); */
   background-color: #ffa;
+}
+
+.place-header {
+  width: 96%;
+  margin-left: 2%;
+  justify-content: space-between; /* align horizontal */
+  align-items: center; /* align vertical */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.place-name {
+  min-width: 96%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  /* background-color: red; */
+  opacity: 0.5;
+}
+
+.fsq-rating {
+  width: 20%;
+  display: inline-block;
+  vertical-align: middle;
+  /* background-color: red; */
+  opacity: 0.5;
+}
+
+.fsq-missing-msg {
+  color: gray;
+}
+
+.keywords {
+  text-align: left;
+  /* color: gray; */
+  margin-top: 0;
+  margin-left: 2%;
+  width: 96%;
+
+  /* background-color: red; */
+  opacity: 0.8;
+}
+
+.place-main-content {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-left: 2%;
+  width: 96%;
+}
+
+.place-img {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  /* margin-left: 10%; */
+}
+
+.fsq-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+
+  /* background-color: red; */
+  /* opacity: 0.8; */
+}
+
+.place-main-text {
+  /* width: 80%; */
+  /* margin-left: 10%; */
+  max-width: 300px;
+}
+
+.fsq-address {
+  text-align: left;
+  /* background-color: red; */
+  /* opacity: 0.8; */
+}
+
+.fsq-tip {
+  text-align: left;
+  /* background-color: red; */
+  /* opacity: 0.8; */
+}
+
+.external-links {
+  /* margin-left: 2%;
+  width: 96%; */
+  /* background-color: red; */
+  /* opacity: 0.8; */
+}
+
+@media screen and (min-width: 300px) {
+  .place-main-content {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .place-img {
+    width: 110px;
+    height: 110px;
+    padding-top: unset;
+  }
+
+  .place-main-text {
+    margin-left: 2%;
+    max-width: unset;
+    flex: 1;
+  }
+
+  .fsq-address {
+    margin-top: 0;
+  }
 }

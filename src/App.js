@@ -7,7 +7,8 @@ import * as FoursquareAPI from './FoursquareAPI';
 //import * as NytAPI from './NytAPI';
 import escapeRegExp from 'escape-string-regexp';
 //import regExp from 'escape-string-regexp';
-import PlacesList from './PlacesList.js'
+import QueryBox from './QueryBox';
+import PlacesList from './PlacesList.js';
 
 
 const placesList = [{
@@ -139,14 +140,14 @@ class App extends Component {
             query: "",
             selectedPlace: -1,
             highlightedPlace: -1,
-            places: []
+            places: [],
+            reloadPlaces: 0
           }
-  reloadPlaces = 0;
 
   setReloadPlaces = (value) => {
-    this.reloadPlaces = value;
+    //this.reloadPlaces = value;
+    this.setState({reloadPlaces: value})
   }
-
 
   /*
    * Append third party data to places kept in state
@@ -317,21 +318,18 @@ class App extends Component {
               aria-label="Map with places"
               mapid="themap"
               markers={this.state.places}
-              reloadMarkers={this.reloadPlaces}
+              reloadMarkers={this.state.reloadPlaces}
               setReloadMarkers={this.setReloadPlaces}
               selectedMarker={this.state.highlightedPlace}
               markerOnClick={this.clickItemByIdx}
             ></Map>
           </section>
           <section id="places-container">
-            <input
-              className="query-input"
-              name="places-filter"
-              type="text"
-              placeholder="Filter places"
-              value={this.state.query}
-              onChange={(event) => this.updateQuery(event.target.value)}
+            <QueryBox
+              query={this.state.query}
+              updateQuery={this.updateQuery}
             />
+
             <PlacesList
               places={this.state.places}
               highlightedPlace={this.state.highlightedPlace}

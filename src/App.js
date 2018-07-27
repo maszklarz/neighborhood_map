@@ -11,7 +11,7 @@ import QueryBox from './QueryBox';
 import PlacesList from './PlacesList.js';
 
 
-const placesList = [{
+const hardcodedPlaces = [{
     position: {
       lat: 51.108177,
       lng: 17.039484
@@ -144,8 +144,19 @@ class App extends Component {
             reloadPlaces: 0
           }
 
-  setReloadPlaces = (value) => {
-    //this.reloadPlaces = value;
+  /*
+   * Returns array of places. For the purpose of this project it is hardcoded
+   * and stored in a global variable.
+   */
+  getAllPlaces() {
+    return hardcodedPlaces;
+  }
+
+  /*
+   * Set or reset a flag that causes map to reload its places on
+   * map component update, see map's componentDidUpdate()
+   */
+  requireReloadPlaces = (value) => {
     this.setState({reloadPlaces: value})
   }
 
@@ -213,36 +224,43 @@ class App extends Component {
 
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
-*/
-    this.addPlaces(placesList);
-  }
-
-  addPlace = (placeData) => {
-    this.setState((state) => { return state.places.push(placeData); });
-    this.setReloadPlaces(1);
+    */
+    this.addPlaces(this.getAllPlaces());
   }
 
   /*
    * Executed when place is focused or hovered
    */
-  focusItemByIdx = (idx) => {
+  highlightPlaceByIdx = (idx) => {
     this.setState({ highlightedPlace: idx });
   }
 
+  /*
+   * Executed when place is clicked. This marks place to be reloaded.
+   */
   selectPlaceByIdx = (idx) => {
     this.setState({ selectedPlace: idx });
   }
+
   /*
    * Executed when map marker or listed place is clicked
    */
   clickItemByIdx = (idx) => {
-    this.focusItemByIdx(idx);
+    this.highlightPlaceByIdx(idx);
     this.selectPlaceByIdx(idx);
     if(idx > -1) {
       const singleItemList = [];
       singleItemList.push(this.state.places[idx]);
       this.loadThirdPartyData(singleItemList);
     }
+  }
+
+  /*
+   * Add single place to a state
+   */
+  addPlace = (placeData) => {
+    this.setState((state) => { return state.places.push(placeData); });
+    this.requireReloadPlaces(1);
   }
 
   /*
@@ -260,35 +278,33 @@ class App extends Component {
     // unselect place if any
     this.clickItemByIdx(-1);
 
-    // Do not load the data now
-    // Load it later, after click, to save API queries limits
+    // Uncomment the line below should API data be loaded for all places at once
+    // When commented out the loading runs on click, to save API query limits
     //this.loadThirdPartyData(placesList);
 
-    // set flag that causes map to reload its places on
-    // map component update, see map's componentDidUpdate()
-    this.setReloadPlaces(1);
+    this.requireReloadPlaces(1);
   }
 
   /*
    * Update state when text in query box changes
    */
-  updateQuery = (query) => {
+  filterPlacesByQuery = (query) => {
     this.setState({query});
     if(query) {
-      // select places matching any word in the query
-      // let q = escapeRegExp(query).replace(' ','|');
+      // Uncomment line below to select places matching any word in the query
+      //let q = escapeRegExp(query).replace(' ','|');
 
-      // select places matching every (partial) word in the query
-      // the final regexp string: (?=.*food)(?=.*cafe)(?=.*art).+
-      // ignore commas
+      // Select places matching every (partial) word in the query.
+      // The queried words are expected to be separated by spaces or commas.
+      // the final regexp: (?=.*food)(?=.*cafe)(?=.*art).+
       let q = "(?=.*" + escapeRegExp(query)
           .trim()
-          .replace(new RegExp(",","g"), " ")
+          .replace(new RegExp(",","g"), " ")  // ignore commas
           .replace(new RegExp(" +","g"), ")(?=.*")+").+";
 
       const match = new RegExp(q, "i");
       this.addPlaces(
-        placesList.filter(place =>
+        this.getAllPlaces().filter(place =>
           match.test(place.description) ||
           (place.keywords && match.test(place.keywords))
         )
@@ -296,10 +312,10 @@ class App extends Component {
     }
     else {
       // for empty query take all places
-      this.addPlaces(placesList);
+      this.addPlaces(this.getAllPlaces());
     }
-
-    this.focusItemByIdx(-1);
+    // reset focus
+    this.highlightPlaceByIdx(-1);
   }
 
   render() {
@@ -319,7 +335,7 @@ class App extends Component {
               mapid="themap"
               markers={this.state.places}
               reloadMarkers={this.state.reloadPlaces}
-              setReloadMarkers={this.setReloadPlaces}
+              setReloadMarkers={this.requireReloadPlaces}
               selectedMarker={this.state.highlightedPlace}
               markerOnClick={this.clickItemByIdx}
             ></Map>
@@ -327,15 +343,14 @@ class App extends Component {
           <section id="places-container">
             <QueryBox
               query={this.state.query}
-              updateQuery={this.updateQuery}
+              updateQuery={this.filterPlacesByQuery}
             />
-
             <PlacesList
               places={this.state.places}
               highlightedPlace={this.state.highlightedPlace}
               selectedPlace={this.state.selectedPlace}
               placeOnClick={this.clickItemByIdx}
-              placeOnFocus={this.focusItemByIdx}
+              placeOnFocus={this.highlightPlaceByIdx}
               selectPlaceByIdx={this.selectPlaceByIdx}
             ></PlacesList>
           </section>

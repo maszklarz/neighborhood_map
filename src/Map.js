@@ -40,21 +40,23 @@ class Map extends Component {
   }
 
   loadMarkersToMap( markers ) {
-    console.log("loadMarkersToMap:");
-    console.log(this.props.markers);
     this.props.markers.forEach((marker, idx) => {
         // Do not use setState here. Mere completion of the refmap in the
         // state is not considered a state change.
         if(!marker.mapref) {
           marker.mapref = L.marker(marker.position)
-            .bindPopup(marker.description+" "+idx)
+            .bindPopup(marker.description)
             .on('click', (e) => {
+              // select and scroll the place list
               this.markerOnClick(idx);
+              // set focus back to the merker
               e.originalEvent.target.focus();
             })
             .on('keypress', (e) => {
               if(e.originalEvent.key==="Enter")
+                // select and scroll the place list
                 this.markerOnClick(idx);
+                // set focus back to the merker
                 e.originalEvent.target.focus();
               })
             .addTo(this.map);
@@ -89,7 +91,6 @@ class Map extends Component {
       this.removeMarkersFromMap();
       this.loadMarkersToMap();
       this.props.setReloadMarkers(0);
-      console.log(this.markerRefs);
     }
     this.highlightSelectedMarker();
   }

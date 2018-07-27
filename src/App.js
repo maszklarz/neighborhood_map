@@ -305,7 +305,7 @@ class App extends Component {
       if (foc) {
         foc.focus();
       }
-      this.state.selectedPlace = -1;
+      this.setState({selectedPlace: -1});
     }
   }
 

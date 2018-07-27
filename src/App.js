@@ -137,6 +137,7 @@ class App extends Component {
   state = {
             query: "",
             selectedMarker: -1,
+            highlightedMarker: -1,
             markers: []
           }
   reloadMarkers = 0;
@@ -145,11 +146,11 @@ class App extends Component {
     this.reloadMarkers = value;
   }
 
+
   /*
    * Append third party data to markers kept in state
    */
   loadThirdPartyData(markers) {
-
     // load 4sq bestPhoto
     markers.forEach((marker, idx) => {
       // keep fsqId for future reference
@@ -202,7 +203,7 @@ class App extends Component {
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
 */
-    this.addMarkers(markerList.slice(7,8));
+    this.addMarkers(markerList);
   }
 
   addMarker = (markerData) => {
@@ -213,8 +214,24 @@ class App extends Component {
   /*
    * Executed when map marker is clicked
    */
-  selectItemByIdx = (idx) => {
+  clickItemByIdx = (idx) => {
+    console.log("clickItemByIdx("+idx+")")
     this.setState({ selectedMarker: idx });
+    this.setState({ highlightedMarker: idx });
+    if(idx > -1) {
+      const singleItemList = [];
+      singleItemList.push(this.state.markers[idx]);
+      this.loadThirdPartyData(singleItemList);
+    }
+  }
+
+  /*
+   * Executed when place is focused or hovered
+   */
+  focusItemByIdx = (idx) => {
+    // debugger;
+    console.log("focusItemByIdx("+idx+")");
+    this.setState({ highlightedMarker: idx });
     console.log(this.state);
   }
 
@@ -231,11 +248,14 @@ class App extends Component {
     // replace old markers with new markers in state
     this.setState({ markers: markerList });
     // unselect marker if any
-    this.selectItemByIdx(-1);
+    this.clickItemByIdx(-1);
     console.log(this.state.markers);
     console.log(markerList);
 
-    this.loadThirdPartyData(markerList);
+    // Do not load the data now
+    // Load it later, after click, to save API queries limits
+    //this.loadThirdPartyData(markerList);
+
     // set flag that causes map to reload its markers on
     // map component update, see map's componentDidUpdate()
     this.setReloadMarkers(1);
@@ -270,16 +290,23 @@ class App extends Component {
       // for empty query take all places
       this.addMarkers(markerList);
     }
+
+    this.focusItemByIdx(-1);
   }
 
   componentDidUpdate() {
     // Scroll places list to show selected place
     // by setting focus on it
-    const foc = document.getElementById('place-'+this.state.selectedMarker);
-    if (foc) {
-      foc.focus();
+    console.log('componentDidUpdate()' + this.state.selectedMarker);
+    if(this.state.selectedMarker > -1) {
+      const foc = document.getElementById('place-'+this.state.selectedMarker);
+      if (foc) {
+        foc.focus();
+      }
+      this.state.selectedMarker = -1;
     }
   }
+
   render() {
     return (
       <div className="App">
@@ -298,8 +325,8 @@ class App extends Component {
               markers={this.state.markers}
               reloadMarkers={this.reloadMarkers}
               setReloadMarkers={this.setReloadMarkers}
-              selectedMarker={this.state.selectedMarker}
-              markerOnClick={this.selectItemByIdx}
+              selectedMarker={this.state.highlightedMarker}
+              markerOnClick={this.clickItemByIdx}
             ></Map>
           </section>
           <section id="places-container">
@@ -315,10 +342,12 @@ class App extends Component {
               {this.state.markers.map((place, idx) => (
                 <li key={"place-"+idx}
                     tabIndex='-1'
-                    className={(this.state.selectedMarker === idx ? "selected-place" : "")}
+                    className={(this.state.highlightedMarker === idx ? "selected-place" : "")}
                 >
                   <button
-                    onClick={(e) => this.selectItemByIdx(idx)}
+                    onClick={(e) => this.clickItemByIdx(idx)}
+                    onMouseEnter={(e) => this.focusItemByIdx(idx)}
+                    onFocus={(e) => this.focusItemByIdx(idx)}
                     id={"place-"+idx}
                     className="place"
                   >

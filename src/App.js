@@ -15,6 +15,8 @@ const markerList = [{
       lng: 17.039484
     },
     foursquareId: '4b7cef7ef964a520aba92fe3',
+    facebookUrl: 'https://www.facebook.com/GaleriaDominikanska/',
+    www: 'http://galeria-dominikanska.pl/',
     description: 'Galeria Dominikańska',
     keywords: 'cafe coffee tea ice beer bars food pizza pasta sushi shops clothes restrooms'
   }, {
@@ -22,7 +24,9 @@ const markerList = [{
       lat: 51.112262,
       lng: 17.028149
     },
-    foursquareId: '',
+    foursquareId: '4d20d1235c4ca1cd6670a43d',
+    facebookUrl: 'https://m.facebook.com/CzaiszCzajowniaWroclaw/',
+    www: 'https://www.czajownia.pl/',
     description: 'Czajownia',
     keywords: 'tea bar'
   }, {
@@ -41,6 +45,7 @@ const markerList = [{
       lng: 17.0313012
     },
     foursquareId: '4e0b56b2d164e3547c2feb9d',
+    facebookUrl: 'https://www.facebook.com/caferozrusznik/',
     description: 'Cafe Rozrusznik',
     keywords: 'cafe coffee tea bar'
   }, {
@@ -55,7 +60,9 @@ const markerList = [{
       lat: 51.118438,
       lng: 17.035584
     },
-    foursquareId: '',
+    foursquareId: '50d33e8a011cb4281d823a94',
+    facebookUrl: 'https://www.facebook.com/Piecownia/',
+    www: 'http://www.piecownia.com.pl/',
     description: 'Piecownia',
     keywords: 'handmade ceramics souvenirs shop handcraft diy'
   }, {
@@ -344,49 +351,51 @@ class App extends Component {
                             alt={"A picture of "+place.description}/>
                         </div>
                     }
-                    {
-                      place.foursquareData &&
-                      place.foursquareData.response &&
-                      place.foursquareData.response.venue &&
                       <div className="place-main-text">
                       {
-                        place.foursquareData.response.venue.location &&
-                        place.foursquareData.response.venue.location.address &&
-                          <p className="fsq-address">Address: {place.foursquareData.response.venue.location.address}</p>
+                        place.foursquareData &&
+                        place.foursquareData.response &&
+                        place.foursquareData.response.venue &&
+                        <div className="place-main-text-fsq">
+                        {
+                          place.foursquareData.response.venue.location &&
+                          place.foursquareData.response.venue.location.address &&
+                            <p className="fsq-address">Address: {place.foursquareData.response.venue.location.address}</p>
+                        }
+                        {
+                          place.foursquareData.response.venue.tips &&
+                          place.foursquareData.response.venue.tips.groups &&
+                          place.foursquareData.response.venue.tips.groups.forEach((group) => {
+                              group.items &&
+                              group.items.forEach((item) => {
+                                item.text && <p className="fsq-tip">{item.text}</p>
+                              })
+                            }
+                          )
+                        }
+                        {
+                          place.foursquareData.response.venue.tips &&
+                          place.foursquareData.response.venue.tips.groups[0] &&
+                          place.foursquareData.response.venue.tips.groups[0].items[0] &&
+                          place.foursquareData.response.venue.tips.groups[0].items[0].text &&
+                            <p className="fsq-tip">Tip: {place.foursquareData.response.venue.tips.groups[0].items[0].text}</p>
+                        }
+                        </div>
                       }
                       {
-                        place.foursquareData.response.venue.tips &&
-                        place.foursquareData.response.venue.tips.groups &&
-                        place.foursquareData.response.venue.tips.groups.forEach((group) => {
-                            group.items &&
-                            group.items.forEach((item) => {
-                              item.text && <p className="fsq-tip">{item.text}</p>
-                            })
-                          }
-                        )
-                      }
-                      {
-                        place.foursquareData.response.venue.tips &&
-                        place.foursquareData.response.venue.tips.groups[0] &&
-                        place.foursquareData.response.venue.tips.groups[0].items[0] &&
-                        place.foursquareData.response.venue.tips.groups[0].items[0].text &&
-                          <p className="fsq-tip">Tip: {place.foursquareData.response.venue.tips.groups[0].items[0].text}</p>
+                        !place.foursquareData && <p className="fsq-missing-msg">Foursquare data could not be loaded.</p>
                       }
                       <p className="external-links">
                       {
                         place.facebookUrl &&
-                          <a className="fb-url" href={place.facebookUrl}>fb</a>
+                          <a className="fb-url" href={place.facebookUrl}><img class="small_logo" src="./fb_logo.svg" alt="Link to facebook"/></a>
                       }
                       {
                         place.www &&
-                          <a className="www-url" href={place.www}>www</a>
+                          <a className="www-url" href={place.www}><img class="small_logo" src="./www_logo.svg" alt="Link to website"/></a>
                       }
                       </p>
                       </div>
-                    }
-                    {
-                      !place.foursquareData && <p className="fsq-missing-msg">Foursquare data not available.</p>
-                    }
                   </article>
                   </button>
                 </li>

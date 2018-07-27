@@ -151,17 +151,23 @@ class App extends Component {
    * Append third party data to places kept in state
    */
   loadThirdPartyData(places) {
-    // load 4sq bestPhoto
+
+    // load foursquare data
     places.forEach((place, idx) => {
       // keep fsqId for future reference
       const fsqId = place.foursquareId;
       // if key is available and data is missing
-      if(fsqId && !place.foursquareData) {
+      if(fsqId &&
+           (!place.foursquareData ||
+             place.foursquareData === "Error" ||
+            !(place.foursquareData.meta.code === 200))) {
         // get data from API
+        place.foursquareData = 'Loading';
+        this.forceUpdate();
         FoursquareAPI.getById(place.foursquareId)
           .then(data => {
             // if data received, make sure it has what we need in it
-            if(data.meta && data.meta.code && data.meta.code === 200) {
+            if(data.meta && data.meta.code) {
               // it has, so apply it to the state
               this.setState((prevState) => {
                 // update the right property in the previous state,
@@ -176,12 +182,18 @@ class App extends Component {
                   })
                 return {places: prevState.places};
               });
+            } else {
+              console.log("4sq response code: "+ data.meta.code);
             }
-          }).catch(err => console.log("4sq error: "+err));
+          }).catch(err => {
+            place.foursquareData = 'Error';
+            this.forceUpdate();
+            console.log("4sq error: "+err);
+          })
       }
     });
 
-
+    // proceed other third-party downloads if necessary
   }
 
   componentDidMount() {
@@ -386,9 +398,9 @@ class App extends Component {
                           place.foursquareData.response.venue.tips.groups &&
                           place.foursquareData.response.venue.tips.groups.forEach((group) => {
                               group.items &&
-                              group.items.forEach((item) => {
+                              group.items.forEach((item) =>
                                 item.text && <p className="fsq-tip">{item.text}</p>
-                              })
+                              )
                             }
                           )
                         }
@@ -402,16 +414,40 @@ class App extends Component {
                         </div>
                       }
                       {
-                        !place.foursquareData && <p className="fsq-missing-msg">Foursquare data could not be loaded.</p>
+                        !place.foursquareId && <p className="fsq-missing-msg">No foursquare reference for this place.</p>
+                      }
+                      {
+                        place.foursquareId &&
+                        !place.foursquareData &&
+                          <p className="fsq-missing-msg">Foursquare data may be available.</p>
+                      }
+                      {
+                        place.foursquareId &&
+                        place.foursquareData &&
+                        place.foursquareData === "Error" &&
+                          <p className="fsq-missing-msg">Error loading foursquare data. Internet connection may be down.</p>
+                      }
+                      {
+                        place.foursquareId &&
+                        place.foursquareData &&
+                        place.foursquareData === "Loading" &&
+                          <p className="fsq-missing-msg">Loading...</p>
+                      }
+                      {
+                        place.foursquareId &&
+                        place.foursquareData &&
+                        place.foursquareData.meta &&
+                        place.foursquareData.meta.code &&
+                        (place.foursquareData.meta.code !== 200) && <p className="fsq-missing-msg">Failed to load foursquare data. Try again later or bet {place.foursquareData.meta.code} on lottery.</p>
                       }
                       <p className="external-links">
                       {
                         place.facebookUrl &&
-                          <a className="fb-url" href={place.facebookUrl}><img class="small_logo" src="./fb_logo.svg" alt="Link to facebook"/></a>
+                          <a className="fb-url" href={place.facebookUrl}><img className="small_logo" src="./fb_logo.svg" alt="Link to facebook"/></a>
                       }
                       {
                         place.www &&
-                          <a className="www-url" href={place.www}><img class="small_logo" src="./www_logo.svg" alt="Link to website"/></a>
+                          <a className="www-url" href={place.www}><img className="small_logo" src="./www_logo.svg" alt="Link to website"/></a>
                       }
                       </p>
                       </div>

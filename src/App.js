@@ -160,8 +160,6 @@ class App extends Component {
         // get data from API
         FoursquareAPI.getById(place.foursquareId)
           .then(data => {
-            console.log("Foursquare, " + place.description);
-            console.log(data);
             // if data received, make sure it has what we need in it
             if(data.meta && data.meta.code && data.meta.code === 200) {
               // it has, so apply it to the state
@@ -176,7 +174,6 @@ class App extends Component {
                       place.foursquareData = data;
                     return place;
                   })
-                console.log(prevState.places[idx]);
                 return {places: prevState.places};
               });
             }
@@ -212,10 +209,9 @@ class App extends Component {
   }
 
   /*
-   * Executed when map marker is clicked
+   * Executed when map marker or listed place is clicked
    */
   clickItemByIdx = (idx) => {
-    console.log("clickItemByIdx("+idx+")")
     this.setState({ selectedPlace: idx });
     this.setState({ highlightedPlace: idx });
     if(idx > -1) {
@@ -229,10 +225,7 @@ class App extends Component {
    * Executed when place is focused or hovered
    */
   focusItemByIdx = (idx) => {
-    // debugger;
-    console.log("focusItemByIdx("+idx+")");
     this.setState({ highlightedPlace: idx });
-    console.log(this.state);
   }
 
   /*
@@ -249,8 +242,6 @@ class App extends Component {
     this.setState({ places: placesList });
     // unselect place if any
     this.clickItemByIdx(-1);
-    console.log(this.state.places);
-    console.log(placesList);
 
     // Do not load the data now
     // Load it later, after click, to save API queries limits
@@ -297,7 +288,6 @@ class App extends Component {
   componentDidUpdate() {
     // Scroll places list to show selected place
     // by setting focus on it
-    console.log('componentDidUpdate()' + this.state.selectedPlace);
     if(this.state.selectedPlace > -1) {
       const foc = document.getElementById('place-'+this.state.selectedPlace);
       if (foc) {

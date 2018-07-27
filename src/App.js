@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import logo from './marker-icon-2x.png';
 import './App.css';
 import Map from './Map';
-import * as UnsplashAPI from './UnsplashAPI';
+//import * as UnsplashAPI from './UnsplashAPI';
 import * as FoursquareAPI from './FoursquareAPI';
-import * as NytAPI from './NytAPI';
+//import * as NytAPI from './NytAPI';
 import escapeRegExp from 'escape-string-regexp';
-import regExp from 'escape-string-regexp';
+//import regExp from 'escape-string-regexp';
 
 
 const placesList = [{

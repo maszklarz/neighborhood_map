@@ -7,6 +7,7 @@ import * as FoursquareAPI from './FoursquareAPI';
 //import * as NytAPI from './NytAPI';
 import escapeRegExp from 'escape-string-regexp';
 //import regExp from 'escape-string-regexp';
+import PlacesList from './PlacesList.js'
 
 
 const placesList = [{
@@ -221,23 +222,26 @@ class App extends Component {
   }
 
   /*
+   * Executed when place is focused or hovered
+   */
+  focusItemByIdx = (idx) => {
+    this.setState({ highlightedPlace: idx });
+  }
+
+  selectPlaceByIdx = (idx) => {
+    this.setState({ selectedPlace: idx });
+  }
+  /*
    * Executed when map marker or listed place is clicked
    */
   clickItemByIdx = (idx) => {
-    this.setState({ selectedPlace: idx });
-    this.setState({ highlightedPlace: idx });
+    this.focusItemByIdx(idx);
+    this.selectPlaceByIdx(idx);
     if(idx > -1) {
       const singleItemList = [];
       singleItemList.push(this.state.places[idx]);
       this.loadThirdPartyData(singleItemList);
     }
-  }
-
-  /*
-   * Executed when place is focused or hovered
-   */
-  focusItemByIdx = (idx) => {
-    this.setState({ highlightedPlace: idx });
   }
 
   /*
@@ -297,18 +301,6 @@ class App extends Component {
     this.focusItemByIdx(-1);
   }
 
-  componentDidUpdate() {
-    // Scroll places list to show selected place
-    // by setting focus on it
-    if(this.state.selectedPlace > -1) {
-      const foc = document.getElementById('place-'+this.state.selectedPlace);
-      if (foc) {
-        foc.focus();
-      }
-      this.setState({selectedPlace: -1});
-    }
-  }
-
   render() {
     return (
       <div className="App">
@@ -340,122 +332,14 @@ class App extends Component {
               value={this.state.query}
               onChange={(event) => this.updateQuery(event.target.value)}
             />
-            <ul className="places-list">
-              {this.state.places.map((place, idx) => (
-                <li key={"place-"+idx}
-                    tabIndex='-1'
-                    className={(this.state.highlightedPlace === idx ? "selected-place" : "")}
-                >
-                  <button
-                    onClick={(e) => this.clickItemByIdx(idx)}
-                    onMouseEnter={(e) => this.focusItemByIdx(idx)}
-                    onFocus={(e) => this.focusItemByIdx(idx)}
-                    id={"place-"+idx}
-                    className="place"
-                  >
-                  <div className="place-header">
-                  <span><h2 className="place-name">{place.description}</h2></span>
-                  {
-                    place.foursquareData &&
-                    place.foursquareData.response &&
-                    place.foursquareData.response.venue &&
-                    place.foursquareData.response.venue.rating &&
-                      <span className="fsq-rating">({place.foursquareData.response.venue.rating})</span>
-                  }
-                  </div>
-                  {
-                    place.keywords &&
-                      <p className="keywords">{place.keywords.trim().replace(new RegExp(" ","g"), ", ")}</p>
-                  }
-                  <article className="place-main-content">
-                    {
-                      place.foursquareData &&
-                      place.foursquareData.response &&
-                      place.foursquareData.response.venue &&
-                      place.foursquareData.response.venue.bestPhoto &&
-                        <div className="place-img">
-                          <img className="fsq-img"
-                            src={place.foursquareData.response.venue.bestPhoto.prefix +
-                                 place.foursquareData.response.venue.bestPhoto.width + 'x' +
-                                 place.foursquareData.response.venue.bestPhoto.height +
-                                 place.foursquareData.response.venue.bestPhoto.suffix}
-                            alt={"A picture of "+place.description}/>
-                        </div>
-                    }
-                      <div className="place-main-text">
-                      {
-                        place.foursquareData &&
-                        place.foursquareData.response &&
-                        place.foursquareData.response.venue &&
-                        <div className="place-main-text-fsq">
-                        {
-                          place.foursquareData.response.venue.location &&
-                          place.foursquareData.response.venue.location.address &&
-                            <p className="fsq-address">Address: {place.foursquareData.response.venue.location.address}</p>
-                        }
-                        {
-                          place.foursquareData.response.venue.tips &&
-                          place.foursquareData.response.venue.tips.groups &&
-                          place.foursquareData.response.venue.tips.groups.forEach((group) => {
-                              group.items &&
-                              group.items.forEach((item) =>
-                                item.text && <p className="fsq-tip">{item.text}</p>
-                              )
-                            }
-                          )
-                        }
-                        {
-                          place.foursquareData.response.venue.tips &&
-                          place.foursquareData.response.venue.tips.groups[0] &&
-                          place.foursquareData.response.venue.tips.groups[0].items[0] &&
-                          place.foursquareData.response.venue.tips.groups[0].items[0].text &&
-                            <p className="fsq-tip">Tip: {place.foursquareData.response.venue.tips.groups[0].items[0].text}</p>
-                        }
-                        </div>
-                      }
-                      {
-                        !place.foursquareId && <p className="fsq-missing-msg">No foursquare reference for this place.</p>
-                      }
-                      {
-                        place.foursquareId &&
-                        !place.foursquareData &&
-                          <p className="fsq-missing-msg">Foursquare data may be available.</p>
-                      }
-                      {
-                        place.foursquareId &&
-                        place.foursquareData &&
-                        place.foursquareData === "Error" &&
-                          <p className="fsq-missing-msg">Error loading foursquare data. Internet connection may be down.</p>
-                      }
-                      {
-                        place.foursquareId &&
-                        place.foursquareData &&
-                        place.foursquareData === "Loading" &&
-                          <p className="fsq-missing-msg">Loading...</p>
-                      }
-                      {
-                        place.foursquareId &&
-                        place.foursquareData &&
-                        place.foursquareData.meta &&
-                        place.foursquareData.meta.code &&
-                        (place.foursquareData.meta.code !== 200) && <p className="fsq-missing-msg">Failed to load foursquare data. Try again later or bet {place.foursquareData.meta.code} on lottery.</p>
-                      }
-                      <p className="external-links">
-                      {
-                        place.facebookUrl &&
-                          <a className="fb-url" href={place.facebookUrl}><img className="small_logo" src="./fb_logo.svg" alt="Link to facebook"/></a>
-                      }
-                      {
-                        place.www &&
-                          <a className="www-url" href={place.www}><img className="small_logo" src="./www_logo.svg" alt="Link to website"/></a>
-                      }
-                      </p>
-                      </div>
-                  </article>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <PlacesList
+              places={this.state.places}
+              highlightedPlace={this.state.highlightedPlace}
+              selectedPlace={this.state.selectedPlace}
+              placeOnClick={this.clickItemByIdx}
+              placeOnFocus={this.focusItemByIdx}
+              selectPlaceByIdx={this.selectPlaceByIdx}
+            ></PlacesList>
           </section>
         </main>
       </div>

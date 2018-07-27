@@ -14,8 +14,9 @@ const markerList = [{
       lat: 51.108177,
       lng: 17.039484
     },
-    foursquareId: '',
-    description: 'Galeria Dominikańska'
+    foursquareId: '4b7cef7ef964a520aba92fe3',
+    description: 'Galeria Dominikańska',
+    keywords: 'cafe coffee tea ice beer bars food pizza pasta sushi shops clothes restrooms'
   }, {
     position: {
       lat: 51.112262,
@@ -56,7 +57,7 @@ const markerList = [{
     },
     foursquareId: '',
     description: 'Piecownia',
-    keywords: 'handmade ceramics souvenirs shop handcraft'
+    keywords: 'handmade ceramics souvenirs shop handcraft diy'
   }, {
     position: {
       lat: 51.116138,
@@ -73,7 +74,7 @@ const markerList = [{
     foursquareId: '55577e53498ec3f82b1871c8',
     facebookUrl: 'https://www.facebook.com/bistronaroznik/',
     description: 'Narożnik',
-    keywords: 'restaurant food cafe coffee tea bar'
+    keywords: 'restaurant food cafe coffee tea beer alcohol bar'
   }, {
     position: {
       lat: 51.122896,
@@ -81,7 +82,7 @@ const markerList = [{
     },
     foursquareId: '',
     description: 'Smak',
-    keywords: 'restaurant food coffee'
+    keywords: 'restaurant food coffee pierogi'
   }, {
     position: {
       lat: 51.109773,
@@ -103,7 +104,7 @@ const markerList = [{
     },
     foursquareId: '558441d0498e012ffdab2637',
     description: 'Powoli',
-    keywords: 'restaurant food coffee tea'
+    keywords: 'restaurant slowfood coffee tea'
   }, {
     position: {
       lat: 51.11997,
@@ -111,7 +112,7 @@ const markerList = [{
     },
     foursquareId: '579f5d16498ebfc79acf82b4',
     description: 'Ogień',
-    keywords: 'restaurant pizza coffee'
+    keywords: 'restaurant pizza pasta coffee tea'
   }, {
     position: {
       lat: 51.12292,
@@ -119,7 +120,7 @@ const markerList = [{
     },
     foursquareId: '',
     description: 'Ramy Domański',
-    keywords: 'art frames handcraft'
+    keywords: 'art frames handcraft service'
   }
 ]
 
@@ -239,9 +240,17 @@ class App extends Component {
   updateQuery = (query) => {
     this.setState({query});
     if(query) {
-      // select places matching the query
-      let q = escapeRegExp(query).replace(' ','|');
-      //q = query;
+      // select places matching any word in the query
+      // let q = escapeRegExp(query).replace(' ','|');
+
+      // select places matching every (partial) word in the query
+      // the final regexp string: (?=.*food)(?=.*cafe)(?=.*art).+
+      // ignore commas
+      let q = "(?=.*" + escapeRegExp(query)
+          .trim()
+          .replace(new RegExp(",","g"), " ")
+          .replace(new RegExp(" +","g"), ")(?=.*")+").+";
+
       const match = new RegExp(q, "i");
       this.addMarkers(
         markerList.filter(marker =>
@@ -318,7 +327,7 @@ class App extends Component {
                   </div>
                   {
                     place.keywords &&
-                      <p className="keywords">{place.keywords}</p>
+                      <p className="keywords">{place.keywords.trim().replace(new RegExp(" ","g"), ", ")}</p>
                   }
                   <article className="place-main-content">
                     {

@@ -9,7 +9,7 @@ import escapeRegExp from 'escape-string-regexp';
 import regExp from 'escape-string-regexp';
 
 
-const markerList = [{
+const placesList = [{
     position: {
       lat: 51.108177,
       lng: 17.039484
@@ -136,31 +136,31 @@ class App extends Component {
 
   state = {
             query: "",
-            selectedMarker: -1,
-            highlightedMarker: -1,
-            markers: []
+            selectedPlace: -1,
+            highlightedPlace: -1,
+            places: []
           }
-  reloadMarkers = 0;
+  reloadPlaces = 0;
 
-  setReloadMarkers = (value) => {
-    this.reloadMarkers = value;
+  setReloadPlaces = (value) => {
+    this.reloadPlaces = value;
   }
 
 
   /*
-   * Append third party data to markers kept in state
+   * Append third party data to places kept in state
    */
-  loadThirdPartyData(markers) {
+  loadThirdPartyData(places) {
     // load 4sq bestPhoto
-    markers.forEach((marker, idx) => {
+    places.forEach((place, idx) => {
       // keep fsqId for future reference
-      const fsqId = marker.foursquareId;
+      const fsqId = place.foursquareId;
       // if key is available and data is missing
-      if(fsqId && !marker.foursquareData) {
+      if(fsqId && !place.foursquareData) {
         // get data from API
-        FoursquareAPI.getById(marker.foursquareId)
+        FoursquareAPI.getById(place.foursquareId)
           .then(data => {
-            console.log("Foursquare, " + marker.description);
+            console.log("Foursquare, " + place.description);
             console.log(data);
             // if data received, make sure it has what we need in it
             if(data.meta && data.meta.code && data.meta.code === 200) {
@@ -168,16 +168,16 @@ class App extends Component {
               this.setState((prevState) => {
                 // update the right property in the previous state,
                 // and return it as the new version
-                prevState.markers =
-                  prevState.markers.map(marker => {
+                prevState.places =
+                  prevState.places.map(place => {
                     // the fsqId we kept at the beginning will help locate
-                    // the right spot (marker) to update
-                    if(marker.foursquareId === fsqId)
-                      marker.foursquareData = data;
-                    return marker;
+                    // the right spot (place) to update
+                    if(place.foursquareId === fsqId)
+                      place.foursquareData = data;
+                    return place;
                   })
-                console.log(prevState.markers[idx]);
-                return {markers: prevState.markers};
+                console.log(prevState.places[idx]);
+                return {places: prevState.places};
               });
             }
           }).catch(err => console.log("4sq error: "+err));
@@ -203,12 +203,12 @@ class App extends Component {
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
 */
-    this.addMarkers(markerList);
+    this.addPlaces(placesList);
   }
 
-  addMarker = (markerData) => {
-    this.setState((state) => { return state.markers.push(markerData); });
-    this.setReloadMarkers(1);
+  addPlace = (placeData) => {
+    this.setState((state) => { return state.places.push(placeData); });
+    this.setReloadPlaces(1);
   }
 
   /*
@@ -216,11 +216,11 @@ class App extends Component {
    */
   clickItemByIdx = (idx) => {
     console.log("clickItemByIdx("+idx+")")
-    this.setState({ selectedMarker: idx });
-    this.setState({ highlightedMarker: idx });
+    this.setState({ selectedPlace: idx });
+    this.setState({ highlightedPlace: idx });
     if(idx > -1) {
       const singleItemList = [];
-      singleItemList.push(this.state.markers[idx]);
+      singleItemList.push(this.state.places[idx]);
       this.loadThirdPartyData(singleItemList);
     }
   }
@@ -231,34 +231,34 @@ class App extends Component {
   focusItemByIdx = (idx) => {
     // debugger;
     console.log("focusItemByIdx("+idx+")");
-    this.setState({ highlightedMarker: idx });
+    this.setState({ highlightedPlace: idx });
     console.log(this.state);
   }
 
   /*
-   * Add markers (places) to a state
+   * Add places to a state
    */
-  addMarkers = (markerList) => {
-    // delete map references from markers so they are to be recreated
-    // with newly added markers to map
-    markerList.forEach(marker => {
-      if(marker.mapref)
-        delete(marker.mapref);
+  addPlaces = (placesList) => {
+    // delete map references from places so they are to be recreated
+    // with newly added places to map
+    placesList.forEach(place => {
+      if(place.mapref)
+        delete(place.mapref);
     });
-    // replace old markers with new markers in state
-    this.setState({ markers: markerList });
-    // unselect marker if any
+    // replace old places with new places in state
+    this.setState({ places: placesList });
+    // unselect place if any
     this.clickItemByIdx(-1);
-    console.log(this.state.markers);
-    console.log(markerList);
+    console.log(this.state.places);
+    console.log(placesList);
 
     // Do not load the data now
     // Load it later, after click, to save API queries limits
-    //this.loadThirdPartyData(markerList);
+    //this.loadThirdPartyData(placesList);
 
-    // set flag that causes map to reload its markers on
+    // set flag that causes map to reload its places on
     // map component update, see map's componentDidUpdate()
-    this.setReloadMarkers(1);
+    this.setReloadPlaces(1);
   }
 
   /*
@@ -279,16 +279,16 @@ class App extends Component {
           .replace(new RegExp(" +","g"), ")(?=.*")+").+";
 
       const match = new RegExp(q, "i");
-      this.addMarkers(
-        markerList.filter(marker =>
-          match.test(marker.description) ||
-          (marker.keywords && match.test(marker.keywords))
+      this.addPlaces(
+        placesList.filter(place =>
+          match.test(place.description) ||
+          (place.keywords && match.test(place.keywords))
         )
       );
     }
     else {
       // for empty query take all places
-      this.addMarkers(markerList);
+      this.addPlaces(placesList);
     }
 
     this.focusItemByIdx(-1);
@@ -297,13 +297,13 @@ class App extends Component {
   componentDidUpdate() {
     // Scroll places list to show selected place
     // by setting focus on it
-    console.log('componentDidUpdate()' + this.state.selectedMarker);
-    if(this.state.selectedMarker > -1) {
-      const foc = document.getElementById('place-'+this.state.selectedMarker);
+    console.log('componentDidUpdate()' + this.state.selectedPlace);
+    if(this.state.selectedPlace > -1) {
+      const foc = document.getElementById('place-'+this.state.selectedPlace);
       if (foc) {
         foc.focus();
       }
-      this.state.selectedMarker = -1;
+      this.state.selectedPlace = -1;
     }
   }
 
@@ -322,10 +322,10 @@ class App extends Component {
               role="application"
               aria-label="Map with places"
               mapid="themap"
-              markers={this.state.markers}
-              reloadMarkers={this.reloadMarkers}
-              setReloadMarkers={this.setReloadMarkers}
-              selectedMarker={this.state.highlightedMarker}
+              markers={this.state.places}
+              reloadMarkers={this.reloadPlaces}
+              setReloadMarkers={this.setReloadPlaces}
+              selectedMarker={this.state.highlightedPlace}
               markerOnClick={this.clickItemByIdx}
             ></Map>
           </section>
@@ -339,10 +339,10 @@ class App extends Component {
               onChange={(event) => this.updateQuery(event.target.value)}
             />
             <ul className="places-list">
-              {this.state.markers.map((place, idx) => (
+              {this.state.places.map((place, idx) => (
                 <li key={"place-"+idx}
                     tabIndex='-1'
-                    className={(this.state.highlightedMarker === idx ? "selected-place" : "")}
+                    className={(this.state.highlightedPlace === idx ? "selected-place" : "")}
                 >
                   <button
                     onClick={(e) => this.clickItemByIdx(idx)}

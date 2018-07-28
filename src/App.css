@@ -31,7 +31,11 @@ h2 {
 .skip-map {
   position: fixed;
   left: 0;
-  top: -500px
+  top: -500px;
+  background: #BF1722;
+  color: white;
+  padding: 8px;
+  z-index: 100;
 }
 
 .skip-map:focus {

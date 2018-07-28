@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './marker-icon-2x.png';
+// import logo from './marker-icon-2x.png';
 import './App.css';
 import Map from './Map';
 //import * as UnsplashAPI from './UnsplashAPI';
@@ -323,7 +323,6 @@ class App extends Component {
       <div className="App">
 
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Neighborhood Map</h1>
         </header>
 

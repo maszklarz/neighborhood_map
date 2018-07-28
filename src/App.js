@@ -322,6 +322,10 @@ class App extends Component {
     return (
       <div className="App">
 
+          <a href="#places-filter" className="skip-map">
+            Skip map
+          </a>
+
         <header className="App-header">
           <h1 className="App-title">Neighborhood Map</h1>
         </header>

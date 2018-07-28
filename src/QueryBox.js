@@ -8,6 +8,8 @@ class QueryBox extends Component {
   render() {
     return (
       <input
+        id="places-filter"
+        tabIndex="0"
         className="query-input"
         name="places-filter"
         type="text"

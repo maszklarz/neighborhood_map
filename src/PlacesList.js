@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class PlacesList extends Component {
 
@@ -134,6 +135,15 @@ class PlacesList extends Component {
       </ul>
     )
   }
+}
+
+PlacesList.propTypes = {
+  places: PropTypes.array.isRequired,
+  highlightedPlace: PropTypes.number.isRequired,
+  selectedPlace: PropTypes.number.isRequired,
+  placeOnClick: PropTypes.func.isRequired,
+  placeOnFocus: PropTypes.func.isRequired,
+  selectPlaceByIdx: PropTypes.func.isRequired
 }
 
 export default PlacesList

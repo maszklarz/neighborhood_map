@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
+import PropTypes from 'prop-types';
+
 // To make leaflet available add "leaflet" to dependencies in package.json
 // and perform npm install
 // No need to include the leaflet.js in index.html, but leaflet.css is still
@@ -103,6 +105,14 @@ class Map extends Component {
       </div>
     )
   }
+}
+
+Map.propTypes = {
+  markers: PropTypes.array.isRequired,
+  reloadMarkers: PropTypes.number.isRequired,
+  setReloadMarkers: PropTypes.func.isRequired,
+  selectedMarker: PropTypes.number.isRequired,
+  markerOnClick: PropTypes.func.isRequired
 }
 
 export default Map

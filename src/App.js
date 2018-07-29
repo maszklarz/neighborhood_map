@@ -207,8 +207,6 @@ class App extends Component {
         <main id="maincontent">
           <section id="map-container">
             <Map
-              role="application"
-              aria-label="Map with places"
               mapid="themap"
               markers={this.state.places}
               reloadMarkers={this.state.reloadPlaces}

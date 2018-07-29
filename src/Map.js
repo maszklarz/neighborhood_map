@@ -101,6 +101,8 @@ class Map extends Component {
     return (
       <div
         className="leaflet-map"
+        role="application"
+        aria-label="Map with places"
         id={this.props.mapid}>
       </div>
     )

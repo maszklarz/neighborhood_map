@@ -68,7 +68,7 @@ class Map extends Component {
   }
 
   componentDidMount() {
-    this.map = L.map(this.props.mapid).setView([51.110036, 17.031952], 15);
+    this.map = L.map(this.props.mapid).setView([51.110036, 17.031952], 14);
 
     // Alternative map otions:
     //const theMapUrl='http://{s}.tile.osm.org/{z}/{x}/{y}.png'; // this does not require token

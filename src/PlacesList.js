@@ -115,7 +115,16 @@ class PlacesList extends Component {
                   place.foursquareData &&
                   place.foursquareData.meta &&
                   place.foursquareData.meta.code &&
-                  (place.foursquareData.meta.code !== 200) && <p className="fsq-missing-msg">Failed to load foursquare data. Try again later or bet {place.foursquareData.meta.code} on lottery.</p>
+                  (place.foursquareData.meta.code === 400) && <p className="fsq-missing-msg">The place is no longer on foursquare or the place reference to foursquare data is broken. Call support.</p>
+                }
+                {
+                  place.foursquareId &&
+                  place.foursquareData &&
+                  place.foursquareData.meta &&
+                  place.foursquareData.meta.code &&
+                  (place.foursquareData.meta.code !== 200) &&
+                  (place.foursquareData.meta.code !== 400) &&
+                  <p className="fsq-missing-msg">Failed to load foursquare data. Try again later or bet {place.foursquareData.meta.code} on lottery.</p>
                 }
                 <p className="external-links">
                 {

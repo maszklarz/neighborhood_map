@@ -197,7 +197,7 @@ class App extends Component {
       <div className="App">
 
           <a href="#places-filter" className="skip-map">
-            Skip map
+            Skip the map
           </a>
 
         <header className="App-header">

@@ -9,12 +9,13 @@ class QueryBox extends Component {
   render() {
     return (
       <input
-        id="places-filter"
+        id={this.props.id}
         tabIndex="0"
         className="query-input"
         name="places-filter"
         type="text"
         placeholder="Filter places"
+        aria-label="Filter places"
         value={this.props.query}
         onChange={(event) => this.onQueryChange(event.target.value)}
       />
@@ -23,6 +24,7 @@ class QueryBox extends Component {
 }
 
 QueryBox.propTypes = {
+  id: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
   updateQuery: PropTypes.func.isRequired,
 }

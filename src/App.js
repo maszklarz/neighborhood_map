@@ -219,6 +219,7 @@ class App extends Component {
           </section>
           <section id="places-container">
             <QueryBox
+              id="places-filter"
               query={this.state.query}
               updateQuery={this.filterPlacesByQuery}
             />

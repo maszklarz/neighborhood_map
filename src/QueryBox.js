@@ -12,7 +12,6 @@ class QueryBox extends Component {
         id={this.props.id}
         tabIndex="0"
         className="query-input"
-        name="places-filter"
         type="text"
         placeholder="Filter places by names or keywords"
         value={this.props.query}

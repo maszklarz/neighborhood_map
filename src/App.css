@@ -118,7 +118,7 @@ h2 {
   width: 100%;
 }
 
-.place {
+.place-button {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -141,8 +141,15 @@ li button {
   padding: 0;
 }
 
+.place-profile {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
 .place-header {
-  width: 96%;
+  width: 100%;
   margin-left: 2%;
   justify-content: space-between; /* align horizontal */
   align-items: center; /* align vertical */
@@ -181,7 +188,7 @@ li button {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin-left: 2%;
-  width: 96%;
+  width: 100%;
 }
 
 .place-img {

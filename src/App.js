@@ -220,7 +220,7 @@ class App extends Component {
               id="places-filter"
               query={this.state.query}
               updateQuery={this.filterPlacesByQuery}
-            />
+            ></QueryBox>
             <PlacesList
               places={this.state.places}
               highlightedPlace={this.state.highlightedPlace}

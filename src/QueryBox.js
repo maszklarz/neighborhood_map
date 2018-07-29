@@ -14,8 +14,7 @@ class QueryBox extends Component {
         className="query-input"
         name="places-filter"
         type="text"
-        placeholder="Filter places"
-        aria-label="Filter places"
+        placeholder="Filter places by names or keywords"
         value={this.props.query}
         onChange={(event) => this.onQueryChange(event.target.value)}
       />

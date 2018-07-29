@@ -196,13 +196,13 @@ class App extends Component {
     return (
       <div className="App">
 
-          <a href="#places-filter" className="skip-map">
-            Skip the map
-          </a>
-
         <header className="App-header">
           <h1 className="App-title">Neighborhood Map</h1>
         </header>
+
+        <a href="#places-filter" className="skip-map">
+          Skip the map
+        </a>
 
         <main id="maincontent">
           <section id="map-container">

@@ -8,130 +8,8 @@ import * as FoursquareAPI from './FoursquareAPI';
 import escapeRegExp from 'escape-string-regexp';
 //import regExp from 'escape-string-regexp';
 import QueryBox from './QueryBox';
-import PlacesList from './PlacesList.js';
-
-
-const hardcodedPlaces = [{
-    position: {
-      lat: 51.108177,
-      lng: 17.039484
-    },
-    foursquareId: '4b7cef7ef964a520aba92fe3',
-    facebookUrl: 'https://www.facebook.com/GaleriaDominikanska/',
-    www: 'http://galeria-dominikanska.pl/',
-    description: 'Galeria Dominikańska',
-    keywords: 'cafe coffee tea ice beer bars food pizza pasta sushi shops clothes restrooms'
-  }, {
-    position: {
-      lat: 51.112262,
-      lng: 17.028149
-    },
-    foursquareId: '4d20d1235c4ca1cd6670a43d',
-    facebookUrl: 'https://m.facebook.com/CzaiszCzajowniaWroclaw/',
-    www: 'https://www.czajownia.pl/',
-    description: 'Czajownia',
-    keywords: 'tea bar'
-  }, {
-    position: {
-      lat: 51.117953,
-      lng: 17.032108
-    },
-    foursquareId: '52b03642498e42beba495943',
-    facebookUrl: 'https://www.facebook.com/macondo.fundacja/',
-    www: 'http://www.macondo.com.pl',
-    description: 'Macondo',
-    keywords: 'cafe coffee tea art gallery handcraft souvenirs shop events'
-  }, {
-    position: {
-      lat: 51.1167066,
-      lng: 17.0313012
-    },
-    foursquareId: '4e0b56b2d164e3547c2feb9d',
-    facebookUrl: 'https://www.facebook.com/caferozrusznik/',
-    description: 'Cafe Rozrusznik',
-    keywords: 'cafe coffee tea bar'
-  }, {
-    position: {
-      lat: 51.123011,
-      lng: 17.034473
-    },
-    foursquareId: '',
-    description: 'Hakernia'
-  }, {
-    position: {
-      lat: 51.118438,
-      lng: 17.035584
-    },
-    foursquareId: '50d33e8a011cb4281d823a94',
-    facebookUrl: 'https://www.facebook.com/Piecownia/',
-    www: 'http://www.piecownia.com.pl/',
-    description: 'Piecownia',
-    keywords: 'handmade ceramics souvenirs shop handcraft diy'
-  }, {
-    position: {
-      lat: 51.116138,
-      lng: 17.042246
-    },
-    foursquareId: '',
-    description: 'Manufaktura',
-    keywords: 'art gallery shop handcraft'
-  }, {
-    position: {
-      lat: 51.119617,
-      lng: 17.032521
-    },
-    foursquareId: '55577e53498ec3f82b1871c8',
-    facebookUrl: 'https://www.facebook.com/bistronaroznik/',
-    description: 'Narożnik',
-    keywords: 'restaurant food cafe coffee tea beer alcohol bar'
-  }, {
-    position: {
-      lat: 51.122896,
-      lng: 17.033867
-    },
-    foursquareId: '',
-    description: 'Smak',
-    keywords: 'restaurant food coffee pierogi'
-  }, {
-    position: {
-      lat: 51.109773,
-      lng: 17.031984
-    },
-    foursquareId: '4b643fc4f964a52058a62ae3',
-    description: 'Rynek'
-  }, {
-    position: {
-      lat: 51.120522,
-      lng: 17.05297
-    },
-    foursquareId: '4be8758088ed2d7f94e5cb1d',
-    description: 'Park Tołpy'
-  }, {
-    position: {
-      lat: 51.1193,
-      lng: 17.033108
-    },
-    foursquareId: '558441d0498e012ffdab2637',
-    description: 'Powoli',
-    keywords: 'restaurant slowfood coffee tea'
-  }, {
-    position: {
-      lat: 51.11997,
-      lng: 17.031523
-    },
-    foursquareId: '579f5d16498ebfc79acf82b4',
-    description: 'Ogień',
-    keywords: 'restaurant pizza pasta coffee tea'
-  }, {
-    position: {
-      lat: 51.12292,
-      lng: 17.034495
-    },
-    foursquareId: '',
-    description: 'Ramy Domański',
-    keywords: 'art frames handcraft service'
-  }
-]
+import PlacesList from './PlacesList';
+import DBHelper from './DBHelper';
 
 
 class App extends Component {
@@ -144,13 +22,6 @@ class App extends Component {
             reloadPlaces: 0
           }
 
-  /*
-   * Returns array of places. For the purpose of this project it is hardcoded
-   * and stored in a global variable.
-   */
-  getAllPlaces() {
-    return hardcodedPlaces;
-  }
 
   /*
    * Set or reset a flag that causes map to reload its places on
@@ -225,7 +96,8 @@ class App extends Component {
     NytAPI.getByQuery('wroclaw')
       .then(data => console.log(data));
     */
-    this.addPlaces(this.getAllPlaces());
+    DBHelper.fetchPlaces()
+      .then(data => this.addPlaces(data.places));
   }
 
   /*

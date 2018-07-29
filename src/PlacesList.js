@@ -29,20 +29,39 @@ class PlacesList extends Component {
               onFocus={(e) => this.props.placeOnFocus(idx)}
               id={"place-"+idx}
               className="place"
+              aria-label={
+                !place.foursquareId && "Place" + place.description + " no Foursquare information available." ||
+                "Get data on " + place.description + " from Foursquare. " + (
+                place.foursquareId &&
+                place.foursquareData &&
+                place.foursquareData.meta &&
+                place.foursquareData.meta.code &&
+                (place.foursquareData.meta.code === 200) && " Data already received" ||
+                ""
+              )}
             >
             <div className="place-header">
-            <span><h2 className="place-name">{place.description}</h2></span>
+            <span><h2 className="place-name" aria-label="Place name">{place.description}</h2></span>
             {
               place.foursquareData &&
               place.foursquareData.response &&
               place.foursquareData.response.venue &&
               place.foursquareData.response.venue.rating &&
-                <span className="fsq-rating">({place.foursquareData.response.venue.rating})</span>
+                <span
+                  className="fsq-rating"
+                  aria-label="rating"
+                >({place.foursquareData.response.venue.rating})
+                </span>
             }
             </div>
             {
               place.keywords &&
-                <p className="keywords">{place.keywords.trim().replace(new RegExp(" ","g"), ", ")}</p>
+                <p className="keywords"
+                   aria-label="Keywords"
+                   name="Keywords"
+                >
+                {place.keywords.trim().replace(new RegExp(" ","g"), ", ")}
+                </p>
             }
             <article className="place-main-content">
               {
@@ -129,11 +148,11 @@ class PlacesList extends Component {
                 <p className="external-links">
                 {
                   place.facebookUrl &&
-                    <a className="fb-url" href={place.facebookUrl}><img className="small_logo" src="./fb_logo.svg" alt="Link to facebook"/></a>
+                    <a className="fb-url" href={place.facebookUrl}><img className="small_logo" src="./fb_logo.svg" alt={"Link to "+ place.description +" facebook"}/></a>
                 }
                 {
                   place.www &&
-                    <a className="www-url" href={place.www}><img className="small_logo" src="./www_logo.svg" alt="Link to website"/></a>
+                    <a className="www-url" href={place.www}><img className="small_logo" src="./www_logo.svg" alt={"Link to "+ place.description +" website"}/></a>
                 }
                 </p>
                 </div>

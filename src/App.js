@@ -175,16 +175,18 @@ class App extends Component {
           .replace(new RegExp(" +","g"), ")(?=.*")+").+";
 
       const match = new RegExp(q, "i");
-      this.addPlaces(
-        this.getAllPlaces().filter(place =>
-          match.test(place.description) ||
-          (place.keywords && match.test(place.keywords))
-        )
-      );
+      DBHelper.fetchPlaces()
+        .then(data => this.addPlaces(
+            data.places.filter(place =>
+              match.test(place.description) ||
+              (place.keywords && match.test(place.keywords))
+          )
+        ));
     }
     else {
       // for empty query take all places
-      this.addPlaces(this.getAllPlaces());
+      DBHelper.fetchPlaces()
+        .then(data => this.addPlaces(data.places));
     }
     // reset focus
     this.highlightPlaceByIdx(-1);

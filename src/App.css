@@ -24,8 +24,10 @@ h2 {
   text-align: center;
   height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: column;
+
+  align-items: stretch;
 }
 
 .skip-map {
@@ -57,15 +59,17 @@ h2 {
 #maincontent {
   flex: 1 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: column;
+  justify-content: flex-start; /* glue to top */
+  align-items: stretch;        /* in column direction: strech width */
 }
 
 #map-container {
-  height: 50%;
-  /* flex: 1 0 50%; */ /*this is alternative to height */
-  z-index: 100;
+  /* height: 50%; */
+  flex: 0 0 50%;  /* this seems to be alternative to height */
 }
+
 .leaflet-map {
   width: 100%;
   height: 100%;
@@ -85,8 +89,10 @@ h2 {
 #places-container {
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 .query-input {
@@ -103,7 +109,7 @@ h2 {
 .places-list {
   padding: 0;
   margin: 0;
-  flex: 1;
+  flex: 1 0 40vh;
   overflow: auto;
 }
 
@@ -151,7 +157,6 @@ li button {
 
 .place-header {
   width: 96%;
-  /* margin-left: 2%; */
   justify-content: space-between; /* align horizontal */
   align-items: center; /* align vertical */
   display: flex;
@@ -168,7 +173,6 @@ li button {
   width: 20%;
   display: inline-block;
   vertical-align: middle;
-  /* opacity: 0.5; */
 }
 
 .fsq-missing-msg {
@@ -178,7 +182,6 @@ li button {
 .keywords {
   text-align: left;
   margin-top: 0;
-  /* margin-left: 2%; */
   width: 96%;
 }
 
@@ -186,7 +189,6 @@ li button {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  /* margin-left: 2%; */
   width: 96%;
 }
 
@@ -241,7 +243,6 @@ li button {
   }
 
   .place-main-text {
-    /* margin-left: 2%; */
     max-width: unset;
     flex: 1;
   }
@@ -252,8 +253,10 @@ li button {
 }
 
 @media screen and (min-width: 800px) {
+
   #maincontent {
     flex-direction: row;
+    align-items: stretch;  /* resize map and list to full height */
   }
 
   #map-container {

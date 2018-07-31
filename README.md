@@ -33,20 +33,20 @@ Note, the API client ID and client secret used to gather Forsquare data is limit
 ## Code Description
 ### Component Structure
 The application is built with React. There are four React components created:
-1. App (src/App.js)
-2. Map (src/Map.js) - wraps up a Leaflet map library
-3. QueryBox (scr/QueryBox.js)
-4. PlacesList (src/PlacesList.js)
+1. App (`src/App.js`)
+2. Map (`src/Map.js`) - wraps up a Leaflet map library
+3. QueryBox (`src/QueryBox.js`)
+4. PlacesList (`src/PlacesList.js`)
 
 ### API Modules
 The external data is gathered asynchronically with Fetch. There are separate modules to handle various APIs:
-- src/FoursquareAPI.js - the only one used so far in the app
-- src/NytAPI.js
-- src/UnsplashAPI.js
+- `src/FoursquareAPI.js` - the only one used so far in the app
+- `src/NytAPI.js`
+- `src/UnsplashAPI.js`
 The latter two APIs have been tested but they are not used at the moment. The initial code has been included but commented out. The main reason is a poor reference to the predefined places (no pictures on Unsplash, no articles in NYT).
 
 There is also a separate module to gather the predefined list of places stored in public/places.json:
-- src/DBHelper.js
+- `src/DBHelper.js`
 
 ### Predefined Places
 File name: `public/places.json`

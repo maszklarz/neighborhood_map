@@ -78,6 +78,13 @@ The App state is the source of the data for all components. Apart from the `plac
 
 The `reloadPlace` flag informs Map's `componentDidUpdate()` function to resynchronize the list of markers on the map with the list of places in the App's state. It is necessary, as the map is made with an external library called **Leaflet**, which is not natively compatible with React.
 
+### Service Worker
+The service worker utilized in this project consists of two files:
+- `src/sw_support.js` - contains the installation routine
+- `public/sw.js` - the service worker itself
+
+The `src/registerServiceWorker.js` is an original SW registration routine provided by Create React App. It is not used in this project by default but remains available just in case.
+
 ## Dependencies
 - [React](https://reactjs.org)
 - Tiling library: [leafletjs](https://leafletjs.com/)

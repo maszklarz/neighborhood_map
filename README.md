@@ -38,6 +38,9 @@ The application is built with React. There are four React components created:
 3. QueryBox (`src/QueryBox.js`)
 4. PlacesList (`src/PlacesList.js`)
 
+### Leaflet
+This project uses Leaflet as its mapping system. It is an open source library. To make the Leaflet available the "leaflet" has been added to dependencies in package.json, so the npm install may gather the required code. There was no need to include the leaflet.js in index.html, which is the way suggested in [Leaflet guide](https://leafletjs.com/examples/quick-start/). Regular import in Map.js has been used instead. The leaflet.css was still required in the html.
+
 ### API Modules
 The external data is gathered asynchronically with Fetch. There are separate modules to handle various APIs:
 - `src/FoursquareAPI.js` - the only one used so far in the app

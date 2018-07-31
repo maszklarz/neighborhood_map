@@ -19,34 +19,33 @@ If port number needs to be changed make sure the `src/DBHelper.js` script is mod
 
 ## Application Usage
 ### The Layout
-The application shows a responsive view of a map of Wroclaw and a list of predefined places. Hovering over the place on the list highlights the corresponding pin on the map. Clicking the pin or the listed place initiates an attempt to complete the place's data based on the external source. So far a Foursquare API is used for the task. If the data is unavailable or cannot be downloaded for any reason the respective message is displayed in the place description area.
+The application shows a responsive view of a map of Wroclaw and a list of predefined places. Hovering over the place on the list animates the corresponding pin on the map and opens its small popup with the name. Clicking the pin or the place on the list initiates an attempt to complete the place's data based on the external source. So far a Foursquare API is used for the task. If the data is unavailable or cannot be downloaded for any reason the respective message is displayed in the place description area.
 
 ### Search Functionality
 The list of places can be narrowed down by query string. The string is entered to a text box. The places are filtered by name and keywords. Empty string shows all available places. The more words entered, the less places may meet the criteria.
 
 ### Accessibility
-The application uses HTML5 semantics and ARIA attributes to make it accessible for page readers. Keyboard only users may utilize convenient skip link to avoid long Tab chain through the map. Focusing the places on their list has similar effect to hovering it with mouse, with additional stops on links to external pages (FB, homepage). Clicking the place with Enter or Space launches a request to external API.
+The application uses HTML5 semantics and ARIA attributes to make it accessible for page readers. Keyboard only users may utilize convenient skip link to avoid long tab chain through the map. Focusing the places on their list has similar effect to hovering it with mouse, with additional stops on links to external pages (FB, homepage). Clicking the place with Enter or Space launches a request to external API.
 
 ### The API Caveat
-Note, the API client ID and client secret used to gather Forsquare data is limited to 50 download attempts a day. If the limit is exceeded, the 429 code value is displayed in the cryptic form of lottery numbers ;-)
+Note, the API client ID and client secret used to gather Forsquare data is limited to 50 calls a day. If the limit is exceeded, the 429 code value is displayed in the cryptic form of lottery numbers ;-)
 
 ## Code Description
 ### Component Structure
-The application is built with React. The external data is gathered asynchronically with Fetch.
-There are four React components created:
+The application is built with React. There are four React components created:
 1. App (src/App.js)
 2. Map (src/Map.js) - wraps up a Leaflet map library
 3. QueryBox (scr/QueryBox.js)
 4. PlacesList (src/PlacesList.js)
 
 ### API Modules
-There are separate modules to handle APIs that could be used to gather external data:
+The external data is gathered asynchronically with Fetch. There are separate modules to handle various APIs:
 - src/FoursquareAPI.js - the only one used so far in the app
 - src/NytAPI.js
 - src/UnsplashAPI.js
-The latter two APIs have been tested but they are not used at the moment. The initial code has been included but commented out.
+The latter two APIs have been tested but they are not used at the moment. The initial code has been included but commented out. The main reason is a poor reference to the predefined places (no pictures on Unsplash, no articles in NYT).
 
-Additionally there is a module to gather the predefined list of places stored in public/places.json:
+There is also a separate module to gather the predefined list of places stored in public/places.json:
 - src/DBHelper.js
 
 ### Predefined Places
@@ -92,4 +91,10 @@ Pull requests are not expected, but may be accepted if they occur ;-)
 - [Rubric](https://review.udacity.com/#!/rubrics/1351/view) for the project.
 - Making accessible apps using ChromeVox: [video tutorial](https://www.youtube.com/watch?v=x18vEEfpK3g)
 - [Introduction to Service Workers](https://developers.google.com/web/fundamentals/primers/service-workers/#register_a_service_worker)
+- [A Guide to Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
 - [Introduction to JS Promises](https://developers.google.com/web/fundamentals/primers/promises)
+- [Regexr](https://regexr.com/335fm), the Regular Expressions tester
+- [A guide to flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+- [JSON formatter](https://jsonlint.com/)
+- [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+- [Markdown Editor](https://dillinger.io/)

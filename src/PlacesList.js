@@ -17,10 +17,10 @@ class PlacesList extends Component {
 
   render() {
     return (
-      <ul className="places-list">
+      <ul className="places-list" tabIndex="-1">
         {this.props.places.map((place, idx) => (
           <li key={"place-"+idx}
-              tabIndex='-1'
+              tabIndex="-1"
               className={(this.props.highlightedPlace === idx ? "selected-place" : "")}
           >
             <button

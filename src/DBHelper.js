@@ -1,6 +1,8 @@
 class DBHelper {
   static getDatabaseURL() {
-    const port = 3000; // Change this to your server port
+    let port = 3000; // Change this to your server port for development
+    if(process.env.NODE_ENV === 'production')
+      port = 5000;    // Change this to your server port for production
     return `http://localhost:${port}/places.json`;
   }
 

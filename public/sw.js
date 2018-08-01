@@ -51,7 +51,7 @@ self.addEventListener('fetch', function(event) {
         return fetch(fetchRequest).then(
           function(response) {
             // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
+            if(!response || response.status !== 200 || (response.type !== 'basic' && response.type !== 'cors')) {
               //console.log('Service Worker: response received, but with issue. Not to be cached.');
               return response;
             }
